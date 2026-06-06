@@ -122,4 +122,4 @@ hardware's documentation before soldering or powering anything.
 
 ## License
 
-Released under the [MIT License](LICENSE).
+Released under the [Apache License](LICENSE).
