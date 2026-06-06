@@ -1,0 +1,24 @@
+{
+  "id": "tmotor-f40-pro-vi-motor",
+  "name": "T-Motor F40 Pro VI",
+  "brand": "T-Motor",
+  "model": "F40 Pro VI 1960KV",
+  "category": "motor",
+  "description": "2306-class 5\" freestyle/race motor. 1960KV suits 6S. Three phase wires to the matching ESC pads.",
+  "voltageMin": 11.1,
+  "voltageMax": 25.2,
+  "currentDraw": 30,
+  "width": 28,
+  "height": 28,
+  "weight": 30.5,
+  "price": 22,
+  "cellMin": 4,
+  "cellMax": 6,
+  "datasheet": "https://store.tmotor.com/",
+  "notes": "Phase order doesn't matter electrically — swap any two leads to reverse direction (needed for props-out).",
+  "pins": [
+    { "name": "A", "type": "motor", "side": "l" },
+    { "name": "B", "type": "motor", "side": "l" },
+    { "name": "C", "type": "motor", "side": "l" }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "beitian-bn880-gps",
+  "name": "Beitian BN-880",
+  "brand": "Beitian",
+  "model": "BN-880",
+  "category": "gps",
+  "description": "GPS module with an onboard HMC5883/QMC compass. Common on long-range and cinematic builds for RTH and position hold.",
+  "voltageMin": 3.3,
+  "voltageMax": 5.5,
+  "currentDraw": 0.05,
+  "width": 28,
+  "height": 28,
+  "weight": 9.5,
+  "price": 18,
+  "datasheet": "https://www.beitian.com/",
+  "notes": "GPS data uses a UART (TX/RX crossed to the FC). The compass uses the I2C bus (SDA/SCL).",
+  "pins": [
+    { "name": "5V",  "type": "5v",     "side": "l" },
+    { "name": "GND", "type": "gnd",    "side": "l" },
+    { "name": "TX",  "type": "tx",     "side": "r" },
+    { "name": "RX",  "type": "rx",     "side": "r" },
+    { "name": "SDA", "type": "signal", "side": "r" },
+    { "name": "SCL", "type": "signal", "side": "r" }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "happymodel-ep1-rx",
+  "name": "HappyModel EP1",
+  "brand": "HappyModel",
+  "model": "EP1 ExpressLRS 2.4GHz",
+  "category": "rx",
+  "description": "Tiny 2.4GHz ExpressLRS receiver with a ceramic antenna. CRSF over a single UART.",
+  "voltageMin": 4.5,
+  "voltageMax": 5.5,
+  "currentDraw": 0.05,
+  "width": 11,
+  "height": 11,
+  "weight": 0.4,
+  "protocol": "analog",
+  "price": 13,
+  "datasheet": "https://www.happymodel.cn/",
+  "notes": "Runs CRSF — wire RX↔TX crossed to a free FC UART. 5V tolerant signal pads.",
+  "pins": [
+    { "name": "5V",  "type": "5v",  "side": "l" },
+    { "name": "GND", "type": "gnd", "side": "l" },
+    { "name": "TX",  "type": "tx",  "side": "r" },
+    { "name": "RX",  "type": "rx",  "side": "r" }
+  ]
+}

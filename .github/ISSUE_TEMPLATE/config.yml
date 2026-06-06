@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/your-org/fpv-build-planner/tree/main/docs
+    about: Usage guide, custom-component how-to, and the full JSON format reference.
+  - name: Add a component yourself
+    url: https://github.com/your-org/fpv-build-planner/blob/main/docs/custom-components.md
+    about: The quickest way to get gear into the library is a small pull request.

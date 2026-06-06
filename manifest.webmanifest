@@ -1,0 +1,20 @@
+{
+  "name": "FPV Build Planner",
+  "short_name": "FPV Planner",
+  "description": "Plan FPV drone builds: node-based wiring diagrams, component library, BOM, and a build health check. No account, runs offline.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0c0f14",
+  "theme_color": "#0c0f14",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

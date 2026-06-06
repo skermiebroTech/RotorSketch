@@ -1,0 +1,33 @@
+{
+  "id": "tmotor-f55a-pro-ii-esc",
+  "name": "T-Motor F55A Pro II",
+  "brand": "T-Motor",
+  "model": "F55A Pro II 4in1",
+  "category": "esc",
+  "description": "55A continuous 4-in-1 BLHeli_32 ESC on a 30.5mm mount. A staple 6S freestyle/racing ESC.",
+  "voltageMin": 11.1,
+  "voltageMax": 25.2,
+  "currentDraw": 0,
+  "width": 40,
+  "height": 40,
+  "weight": 11,
+  "mountSpacing": "30.5",
+  "price": 60,
+  "cellMin": 3,
+  "cellMax": 6,
+  "datasheet": "https://store.tmotor.com/",
+  "notes": "Add a low-ESR capacitor across the VBAT/GND input pads. Telemetry pad (TLM) connects to a spare FC UART RX.",
+  "pins": [
+    { "name": "VBAT", "type": "vbat",   "side": "l" },
+    { "name": "GND",  "type": "gnd",    "side": "l" },
+    { "name": "MA",   "type": "motor",  "side": "l" },
+    { "name": "MB",   "type": "motor",  "side": "l" },
+    { "name": "MC",   "type": "motor",  "side": "l" },
+    { "name": "S1",   "type": "signal", "side": "r" },
+    { "name": "S2",   "type": "signal", "side": "r" },
+    { "name": "S3",   "type": "signal", "side": "r" },
+    { "name": "S4",   "type": "signal", "side": "r" },
+    { "name": "TLM",  "type": "tx",     "side": "r" },
+    { "name": "GND",  "type": "gnd",    "side": "r" }
+  ]
+}

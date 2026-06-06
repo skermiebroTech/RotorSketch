@@ -1,0 +1,713 @@
+{
+  "schema": "fpv-build-planner/project@1",
+  "exportedAt": "2026-06-05T23:54:47.288Z",
+  "builds": [
+    {
+      "id": "example-analog-5in",
+      "name": "Analog 5\" Freestyle (example)",
+      "frameSize": "5\"",
+      "propSize": "5x4.3x3",
+      "cells": 6,
+      "motorKV": 1900,
+      "notes": "Worked example shipped with the planner — a 6S analog freestyle build. Open it, poke the wiring, run the health check.",
+      "components": [
+        {
+          "compId": "fc-generic-f7",
+          "qty": 1
+        },
+        {
+          "compId": "esc-4in1-50a",
+          "qty": 1
+        },
+        {
+          "compId": "vtx-analog-800",
+          "qty": 1
+        },
+        {
+          "compId": "cam-analog",
+          "qty": 1
+        },
+        {
+          "compId": "rx-elrs",
+          "qty": 1
+        },
+        {
+          "compId": "motor-2207",
+          "qty": 4
+        },
+        {
+          "compId": "battery-6s",
+          "qty": 1
+        },
+        {
+          "compId": "cap-1000",
+          "qty": 1
+        }
+      ],
+      "diagram": {
+        "nodes": [
+          {
+            "id": "n1",
+            "compId": "battery-6s",
+            "name": "LiPo 6S 1300mAh",
+            "x": 40,
+            "y": 120,
+            "locked": false,
+            "pins": [
+              {
+                "id": "n1p1",
+                "name": "+",
+                "type": "vbat",
+                "side": "r"
+              },
+              {
+                "id": "n1p2",
+                "name": "-",
+                "type": "gnd",
+                "side": "r"
+              }
+            ]
+          },
+          {
+            "id": "n2",
+            "compId": "cap-1000",
+            "name": "Capacitor 1000µF",
+            "x": 60,
+            "y": 330,
+            "locked": false,
+            "pins": [
+              {
+                "id": "n2p1",
+                "name": "+",
+                "type": "vbat",
+                "side": "l"
+              },
+              {
+                "id": "n2p2",
+                "name": "-",
+                "type": "gnd",
+                "side": "l"
+              }
+            ]
+          },
+          {
+            "id": "n3",
+            "compId": "esc-4in1-50a",
+            "name": "4-in-1 ESC 50A",
+            "x": 280,
+            "y": 200,
+            "locked": false,
+            "pins": [
+              {
+                "id": "n3p1",
+                "name": "VBAT",
+                "type": "vbat",
+                "side": "l"
+              },
+              {
+                "id": "n3p2",
+                "name": "GND",
+                "type": "gnd",
+                "side": "l"
+              },
+              {
+                "id": "n3p3",
+                "name": "S1",
+                "type": "signal",
+                "side": "r"
+              },
+              {
+                "id": "n3p4",
+                "name": "S2",
+                "type": "signal",
+                "side": "r"
+              },
+              {
+                "id": "n3p5",
+                "name": "S3",
+                "type": "signal",
+                "side": "r"
+              },
+              {
+                "id": "n3p6",
+                "name": "S4",
+                "type": "signal",
+                "side": "r"
+              },
+              {
+                "id": "n3p7",
+                "name": "TLM",
+                "type": "tx",
+                "side": "r"
+              },
+              {
+                "id": "n3p8",
+                "name": "GND",
+                "type": "gnd",
+                "side": "r"
+              },
+              {
+                "id": "n3p9",
+                "name": "MA",
+                "type": "motor",
+                "side": "l"
+              },
+              {
+                "id": "n3p10",
+                "name": "MB",
+                "type": "motor",
+                "side": "l"
+              },
+              {
+                "id": "n3p11",
+                "name": "MC",
+                "type": "motor",
+                "side": "l"
+              }
+            ]
+          },
+          {
+            "id": "n4",
+            "compId": "fc-generic-f7",
+            "name": "F7 Flight Controller",
+            "x": 540,
+            "y": 120,
+            "locked": false,
+            "pins": [
+              {
+                "id": "n4p1",
+                "name": "VBAT",
+                "type": "vbat",
+                "side": "l"
+              },
+              {
+                "id": "n4p2",
+                "name": "GND",
+                "type": "gnd",
+                "side": "l"
+              },
+              {
+                "id": "n4p3",
+                "name": "5V",
+                "type": "5v",
+                "side": "l"
+              },
+              {
+                "id": "n4p4",
+                "name": "9V",
+                "type": "9v",
+                "side": "l"
+              },
+              {
+                "id": "n4p5",
+                "name": "M1",
+                "type": "motor",
+                "side": "l"
+              },
+              {
+                "id": "n4p6",
+                "name": "M2",
+                "type": "motor",
+                "side": "l"
+              },
+              {
+                "id": "n4p7",
+                "name": "M3",
+                "type": "motor",
+                "side": "l"
+              },
+              {
+                "id": "n4p8",
+                "name": "M4",
+                "type": "motor",
+                "side": "l"
+              },
+              {
+                "id": "n4p9",
+                "name": "RX1",
+                "type": "rx",
+                "side": "r"
+              },
+              {
+                "id": "n4p10",
+                "name": "TX1",
+                "type": "tx",
+                "side": "r"
+              },
+              {
+                "id": "n4p11",
+                "name": "RX2",
+                "type": "rx",
+                "side": "r"
+              },
+              {
+                "id": "n4p12",
+                "name": "TX2",
+                "type": "tx",
+                "side": "r"
+              },
+              {
+                "id": "n4p13",
+                "name": "RX3",
+                "type": "rx",
+                "side": "r"
+              },
+              {
+                "id": "n4p14",
+                "name": "TX3",
+                "type": "tx",
+                "side": "r"
+              },
+              {
+                "id": "n4p15",
+                "name": "SBUS",
+                "type": "sbus",
+                "side": "r"
+              },
+              {
+                "id": "n4p16",
+                "name": "CAM",
+                "type": "cam",
+                "side": "r"
+              },
+              {
+                "id": "n4p17",
+                "name": "VTX",
+                "type": "vtx",
+                "side": "r"
+              },
+              {
+                "id": "n4p18",
+                "name": "LED",
+                "type": "led",
+                "side": "r"
+              }
+            ]
+          },
+          {
+            "id": "n5",
+            "compId": "rx-elrs",
+            "name": "ELRS Receiver",
+            "x": 840,
+            "y": 60,
+            "locked": false,
+            "pins": [
+              {
+                "id": "n5p1",
+                "name": "5V",
+                "type": "5v",
+                "side": "l"
+              },
+              {
+                "id": "n5p2",
+                "name": "GND",
+                "type": "gnd",
+                "side": "l"
+              },
+              {
+                "id": "n5p3",
+                "name": "TX",
+                "type": "tx",
+                "side": "r"
+              },
+              {
+                "id": "n5p4",
+                "name": "RX",
+                "type": "rx",
+                "side": "r"
+              }
+            ]
+          },
+          {
+            "id": "n6",
+            "compId": "vtx-analog-800",
+            "name": "Analog VTX 800mW",
+            "x": 840,
+            "y": 240,
+            "locked": false,
+            "pins": [
+              {
+                "id": "n6p1",
+                "name": "VBAT",
+                "type": "9v",
+                "side": "l"
+              },
+              {
+                "id": "n6p2",
+                "name": "GND",
+                "type": "gnd",
+                "side": "l"
+              },
+              {
+                "id": "n6p3",
+                "name": "VIN",
+                "type": "video",
+                "side": "r"
+              },
+              {
+                "id": "n6p4",
+                "name": "SA",
+                "type": "rx",
+                "side": "r"
+              }
+            ]
+          },
+          {
+            "id": "n7",
+            "compId": "cam-analog",
+            "name": "Analog FPV Camera",
+            "x": 840,
+            "y": 430,
+            "locked": false,
+            "pins": [
+              {
+                "id": "n7p1",
+                "name": "5V",
+                "type": "5v",
+                "side": "l"
+              },
+              {
+                "id": "n7p2",
+                "name": "GND",
+                "type": "gnd",
+                "side": "l"
+              },
+              {
+                "id": "n7p3",
+                "name": "VOUT",
+                "type": "video",
+                "side": "r"
+              }
+            ]
+          }
+        ],
+        "wires": [
+          {
+            "id": "w1",
+            "from": {
+              "node": "n1",
+              "pin": "n1p1"
+            },
+            "to": {
+              "node": "n3",
+              "pin": "n3p1"
+            },
+            "type": "power",
+            "color": "#ff4d4f",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w2",
+            "from": {
+              "node": "n1",
+              "pin": "n1p2"
+            },
+            "to": {
+              "node": "n3",
+              "pin": "n3p2"
+            },
+            "type": "ground",
+            "color": "#9aa6b5",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w3",
+            "from": {
+              "node": "n2",
+              "pin": "n2p1"
+            },
+            "to": {
+              "node": "n3",
+              "pin": "n3p1"
+            },
+            "type": "power",
+            "color": "#ff4d4f",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w4",
+            "from": {
+              "node": "n2",
+              "pin": "n2p2"
+            },
+            "to": {
+              "node": "n3",
+              "pin": "n3p2"
+            },
+            "type": "ground",
+            "color": "#9aa6b5",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w5",
+            "from": {
+              "node": "n3",
+              "pin": "n3p1"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p1"
+            },
+            "type": "power",
+            "color": "#ff4d4f",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w6",
+            "from": {
+              "node": "n3",
+              "pin": "n3p2"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p2"
+            },
+            "type": "ground",
+            "color": "#9aa6b5",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w7",
+            "from": {
+              "node": "n3",
+              "pin": "n3p3"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p5"
+            },
+            "type": "signal",
+            "color": "#ffd60a",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w8",
+            "from": {
+              "node": "n3",
+              "pin": "n3p4"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p6"
+            },
+            "type": "signal",
+            "color": "#ffd60a",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w9",
+            "from": {
+              "node": "n3",
+              "pin": "n3p5"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p7"
+            },
+            "type": "signal",
+            "color": "#ffd60a",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w10",
+            "from": {
+              "node": "n3",
+              "pin": "n3p6"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p8"
+            },
+            "type": "signal",
+            "color": "#ffd60a",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w11",
+            "from": {
+              "node": "n5",
+              "pin": "n5p1"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p3"
+            },
+            "type": "5v",
+            "color": "#ff9f0a",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w12",
+            "from": {
+              "node": "n5",
+              "pin": "n5p2"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p2"
+            },
+            "type": "ground",
+            "color": "#9aa6b5",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w13",
+            "from": {
+              "node": "n5",
+              "pin": "n5p3"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p9"
+            },
+            "type": "uart",
+            "color": "#3a9bff",
+            "label": "CRSF",
+            "style": "curved"
+          },
+          {
+            "id": "w14",
+            "from": {
+              "node": "n5",
+              "pin": "n5p4"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p10"
+            },
+            "type": "uart",
+            "color": "#3a9bff",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w15",
+            "from": {
+              "node": "n6",
+              "pin": "n6p1"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p4"
+            },
+            "type": "9v",
+            "color": "#ff7a00",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w16",
+            "from": {
+              "node": "n6",
+              "pin": "n6p2"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p2"
+            },
+            "type": "ground",
+            "color": "#9aa6b5",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w17",
+            "from": {
+              "node": "n6",
+              "pin": "n6p4"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p12"
+            },
+            "type": "uart",
+            "color": "#3a9bff",
+            "label": "SmartAudio",
+            "style": "curved"
+          },
+          {
+            "id": "w18",
+            "from": {
+              "node": "n7",
+              "pin": "n7p1"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p3"
+            },
+            "type": "5v",
+            "color": "#ff9f0a",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w19",
+            "from": {
+              "node": "n7",
+              "pin": "n7p2"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p2"
+            },
+            "type": "ground",
+            "color": "#9aa6b5",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w20",
+            "from": {
+              "node": "n7",
+              "pin": "n7p3"
+            },
+            "to": {
+              "node": "n4",
+              "pin": "n4p16"
+            },
+            "type": "video",
+            "color": "#38d66a",
+            "label": "",
+            "style": "curved"
+          },
+          {
+            "id": "w21",
+            "from": {
+              "node": "n4",
+              "pin": "n4p17"
+            },
+            "to": {
+              "node": "n6",
+              "pin": "n6p3"
+            },
+            "type": "video",
+            "color": "#38d66a",
+            "label": "",
+            "style": "curved"
+          }
+        ]
+      },
+      "createdAt": 1780703687288,
+      "updatedAt": 1780703687288
+    }
+  ],
+  "customComponents": [],
+  "settings": {
+    "route": "curved",
+    "grid": false,
+    "labels": true,
+    "theme": "dark"
+  }
+}

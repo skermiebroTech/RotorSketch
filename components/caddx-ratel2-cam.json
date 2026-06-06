@@ -1,0 +1,23 @@
+{
+  "id": "caddx-ratel2-cam",
+  "name": "Caddx Ratel 2",
+  "brand": "Caddx",
+  "model": "Ratel 2",
+  "category": "camera",
+  "description": "1/1.8\" starlight analog FPV camera with excellent low-light performance. A go-to for analog freestyle.",
+  "voltageMin": 5,
+  "voltageMax": 40,
+  "currentDraw": 0.15,
+  "width": 19,
+  "height": 19,
+  "weight": 6,
+  "protocol": "analog",
+  "price": 30,
+  "datasheet": "https://caddxfpv.com/",
+  "notes": "Video out goes to the VTX (or to the FC CAM pad for OSD passthrough). OSD/control over the joined UART if used.",
+  "pins": [
+    { "name": "5V",   "type": "5v",    "side": "l" },
+    { "name": "GND",  "type": "gnd",   "side": "l" },
+    { "name": "VOUT", "type": "video", "side": "r" }
+  ]
+}
