@@ -514,6 +514,68 @@ table.bom tfoot td{font-family:var(--font-mono);font-weight:700;background:var(-
 .pin-row select{max-width:118px}
 @media (max-width:560px){.cf-grid,.cf-uploads{grid-template-columns:1fr}}
 
+/* ---- accurate board-part editor (App.PartEditor) ---- */
+.modal.part-editor{max-width:1180px;width:96vw;height:92vh;max-height:92vh;padding:0}
+.pe-head{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.pe-steps{display:flex;gap:2px;flex-wrap:wrap}
+.pe-step{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:var(--radius-sm);font-size:12px;color:var(--text-faint);cursor:pointer;border:1px solid transparent}
+.pe-step .n{font-family:var(--font-mono);width:18px;height:18px;border-radius:50%;background:var(--panel-3);display:inline-flex;align-items:center;justify-content:center;font-size:10px}
+.pe-step:hover{color:var(--text-dim)}
+.pe-step.active{color:var(--text);background:var(--panel-3);border-color:var(--line)}
+.pe-step.active .n{background:var(--accent);color:var(--accent-ink)}
+.pe-main{display:grid;grid-template-columns:210px 1fr 252px;flex:1;min-height:0;overflow:hidden}
+.pe-col{display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden}
+.pe-left{border-right:1px solid var(--line);background:var(--panel-2)}
+.pe-right{border-left:1px solid var(--line);background:var(--panel-2)}
+.pe-pad{padding:13px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.pe-stage-wrap{position:relative;background:var(--bg)}
+.pe-stage{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;display:block}
+.pe-secttl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);font-weight:700;margin-top:2px}
+.pe-tools,.pe-list{display:flex;flex-direction:column;gap:6px}
+.pe-tool{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);background:var(--panel-3);border:1px solid var(--line-soft);color:var(--text-dim);cursor:pointer;font-size:12.5px;text-align:left;width:100%}
+.pe-tool:hover{border-color:var(--accent);color:var(--text)}
+.pe-tool.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.pe-tool svg{width:16px;height:16px;flex:0 0 16px}
+.pe-instr{font-size:11.5px;color:var(--text-faint);line-height:1.55;background:var(--panel-3);border:1px solid var(--line-soft);border-radius:var(--radius-sm);padding:9px 10px}
+.pe-instr b{color:var(--text-dim)}
+.pe-empty{font-size:11.5px;color:var(--text-faint);padding:8px;text-align:center}
+.pe-row{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:6px;background:var(--panel-3);border:1px solid var(--line-soft);font-size:12px;cursor:pointer}
+.pe-row:hover{border-color:var(--accent)}
+.pe-row.sel{border-color:var(--accent);background:var(--panel)}
+.pe-row .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pe-grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pe-field{display:flex;flex-direction:column;gap:4px}
+.pe-field label{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);font-weight:600}
+.pe-field input,.pe-field select,.pe-field textarea{background:var(--panel-3);border:1px solid var(--line);border-radius:6px;padding:6px 8px;color:var(--text);font-size:12px;width:100%;font-family:inherit}
+.pe-field input:focus,.pe-field select:focus,.pe-field textarea:focus{border-color:var(--accent);outline:none}
+.pe-slider{display:flex;gap:7px;align-items:center}
+.pe-slider input[type=range]{flex:1;min-width:0;accent-color:var(--accent);padding:0}
+.pe-slider input[type=number]{width:58px;flex:0 0 58px}
+.pe-seg{display:flex;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden}
+.pe-seg button{flex:1;padding:7px 6px;background:var(--panel-3);color:var(--text-dim);font-size:12px;border-right:1px solid var(--line);cursor:pointer}
+.pe-seg button:last-child{border-right:none}
+.pe-seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.pe-foot{display:flex;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--line);background:var(--panel-2)}
+.pe-stage-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:var(--panel-2);border:1px solid var(--line);border-radius:20px;padding:5px 14px;font-size:11.5px;color:var(--text-dim);pointer-events:none;max-width:84%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pe-stage-tools{position:absolute;left:10px;bottom:10px;display:flex;gap:3px;background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:3px}
+.pe-stage .ol-image{opacity:.92}
+.pe-stage .ol-outline{fill:rgba(25,227,196,.06);stroke:var(--accent);stroke-width:1.6;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.pe-stage .ol-outline.open{fill:none;stroke-dasharray:5 4}
+.pe-stage .ol-hole{fill:none;stroke:var(--amber);stroke-width:1.6;vector-effect:non-scaling-stroke}
+.pe-stage .ol-hole.cal{stroke:var(--accent)}
+.pe-stage .ol-pad{fill:rgba(58,155,255,.25);stroke:var(--w-uart);stroke-width:1.4;vector-effect:non-scaling-stroke}
+.pe-stage .ol-visual{fill:rgba(192,107,255,.16);stroke:var(--w-motor);stroke-width:1.4;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+.pe-stage .ol-sel{stroke-width:2.6;filter:drop-shadow(0 0 2px var(--accent))}
+.pe-stage .ol-handle{stroke:var(--bg);stroke-width:1.4;vector-effect:non-scaling-stroke;cursor:grab}
+.pe-stage .ol-lbl{fill:var(--text);font-family:var(--font-mono);paint-order:stroke;stroke:var(--bg);stroke-width:2.5px;stroke-linejoin:round}
+@media (max-width:900px){.pe-main{grid-template-columns:168px 1fr 200px}}
+
+/* board nodes drawn on the wiring canvas (calibrated custom parts) */
+.node-rect.board{fill:transparent;stroke:var(--line-soft)}
+.node-rect.board.sel{stroke:var(--accent);stroke-width:2}
+.plabel.board{font-size:8.5px}
+.node-title.board{fill:var(--text-dim);font-family:var(--font-display);font-weight:600;font-size:10.5px}
+
 /* ---- in-app docs ---- */
 .doc{max-width:760px;margin:0 auto;padding:26px 24px 60px;line-height:1.6;color:var(--text-dim)}
 .doc h2{font-family:var(--font-display);font-size:24px;color:var(--text);margin:0 0 6px}
@@ -595,7 +657,9 @@ table.bom tfoot td{font-family:var(--font-mono);font-weight:700;background:var(-
       <div class="dd-menu">
         <button class="dd-item" id="themeToggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Toggle light / dark</button>
         <button class="dd-item" id="dupBuildBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Duplicate this build</button>
+        <button class="dd-item" id="newBoardPartBtn2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/><path d="M3 8h2M3 12h2M3 16h2M19 8h2M19 12h2M19 16h2M8 3v2M12 3v2M16 3v2M8 19v2M12 19v2M16 19v2"/></svg>Create board part (calibrated)</button>
         <button class="dd-item" id="newCompBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Create custom component</button>
+        <button class="dd-item" id="importPartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Import custom part (.json)</button>
         <button class="dd-item" id="exportThemeBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.2 0-.8.7-1.5 1.5-1.5H16a6 6 0 0 0 6-6c0-5-4.5-8-10-8z"/></svg>Export theme</button>
         <div class="dd-sep"></div>
         <button class="dd-item" id="helpBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>How to use / docs</button>
@@ -633,10 +697,14 @@ table.bom tfoot td{font-family:var(--font-mono);font-weight:700;background:var(-
           </div>
         </div>
         <div class="side-body"><div class="clist" id="compList"></div></div>
-        <div class="side-head" style="border-top:1px solid var(--line-soft);border-bottom:none">
+        <div class="side-head" style="border-top:1px solid var(--line-soft);border-bottom:none;display:block;padding:8px 10px">
+          <button class="btn sm primary" id="newBoardPartBtn" style="width:100%;justify-content:center;margin-bottom:6px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/><path d="M3 8h2M3 12h2M3 16h2M19 8h2M19 12h2M19 16h2M8 3v2M12 3v2M16 3v2M8 19v2M12 19v2M16 19v2"/></svg>
+            Create board part
+          </button>
           <button class="btn sm ghost" id="newCompBtn2" style="width:100%;justify-content:center">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            New custom component
+            Quick custom part
           </button>
         </div>
       </div>
@@ -749,6 +817,9 @@ table.bom tfoot td{font-family:var(--font-mono);font-weight:700;background:var(-
 <input type="file" id="fileImport" accept="application/json,.json" hidden>
 <input type="file" id="fileImage" accept="image/*" hidden>
 <input type="file" id="fileDxf" accept=".dxf" hidden>
+<input type="file" id="filePartImg" accept="image/*" hidden>
+<input type="file" id="filePartSvg" accept=".svg,image/svg+xml" hidden>
+<input type="file" id="filePartImport" accept="application/json,.json" hidden>
 
 <script>
 /* =========================================================================
@@ -1177,7 +1248,7 @@ App.Store = (function(){
       const d = JSON.parse(raw);
       if(Array.isArray(d.builds)) S.builds = d.builds;
       if(d.currentId) S.currentId = d.currentId;
-      if(Array.isArray(d.customComponents)) S.customComponents = d.customComponents;
+      if(Array.isArray(d.customComponents)){ S.customComponents = d.customComponents; migrateParts(S.customComponents); }
       if(d.settings) Object.assign(S.settings, d.settings);
       if(!App.State.current() && S.builds[0]) S.currentId = S.builds[0].id;
       return true;
@@ -1207,6 +1278,7 @@ App.Store = (function(){
         const cm=new Map(S.customComponents.map(c=>[c.id,c]));
         obj.customComponents.forEach(c=>{ if(c&&c.id) cm.set(c.id,c); });
         S.customComponents=Array.from(cm.values());
+        migrateParts(S.customComponents);
       }
       S.currentId = obj.builds[0]? obj.builds[0].id : S.currentId;
     } else if(obj.diagram || obj.components){     // single build
@@ -1229,6 +1301,26 @@ App.Store = (function(){
   function deleteCustomComponent(id){
     S.customComponents = S.customComponents.filter(c=>c.id!==id);
     App.State.rebuildCatalog(); save();
+  }
+  // Run the board-part schema migration over any custom components that carry
+  // calibrated `part` geometry (keeps older saved/imported parts loadable).
+  function migrateParts(list){ (list||[]).forEach(c=>{ if(c&&c.part&&App.PartEditor) App.PartEditor.migratePart(c.part); }); }
+
+  // ---- single custom part (board part) export / import ----
+  function exportCustomPart(comp){
+    const data={ schema:"fpv-build-planner/part@3", exportedAt:new Date().toISOString(), component:comp };
+    const fn=(comp.id||"part").replace(/[^a-z0-9_-]/gi,"-").toLowerCase()+".json";
+    download(fn, JSON.stringify(data,null,2), "application/json");
+    App.UI.toast("Part exported","ok");
+  }
+  function importCustomPart(obj){
+    const c = (obj && obj.component) ? obj.component : obj;
+    if(!c || !c.id) throw new Error("Not a custom part file");
+    if(c.part) App.PartEditor.migratePart(c.part);
+    c.custom=true;
+    saveCustomComponent(c);
+    App.UI.fullRefresh();
+    App.UI.toast("Custom part imported","ok");
   }
 
   // ---- share link: encode current build into URL hash (#b=...) ----
@@ -1270,6 +1362,7 @@ App.Store = (function(){
     return d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+"-"+z(d.getHours())+z(d.getMinutes()); }
 
   return { save, load, exportProject, importProject, saveCustomComponent, deleteCustomComponent,
+           exportCustomPart, importCustomPart,
            makeShareLink, tryLoadFromHash, stamp };
 })();
 /* ========================================================================
@@ -1281,6 +1374,9 @@ App.Store = (function(){
    ======================================================================== */
 App.Editor = (function(){
   const HEAD_H=34, PIN_GAP=22, PAD_B=12, NODE_W=158, DOT_R=5, GRID=22, SNAP=18;
+  // Canvas render scale for calibrated board parts: how many on-canvas px equal
+  // one real-world mm. Keeps custom boards roughly the size of generic nodes.
+  const CANVAS_PX_PER_MM=3.4;
   const NS="http://www.w3.org/2000/svg";
   const S=App.State.S;
 
@@ -1303,6 +1399,8 @@ App.Editor = (function(){
   /* ---- geometry ---- */
   function inferSide(type){ return ["vbat","gnd","5v","9v","3v3","power","ground"].includes(type)?"l":"r"; }
   function layoutNode(node){
+    const comp0=App.State.findComp(node.compId);
+    if(comp0 && comp0.part && comp0.part.schemaVersion) return layoutBoardNode(node,comp0);
     const pins=(node.pins||[]).map(p=>({...p, side:p.side||inferSide(p.type)}));
     const L=pins.filter(p=>p.side==="l"), R=pins.filter(p=>p.side==="r");
     const T=pins.filter(p=>p.side==="t"), B=pins.filter(p=>p.side==="b");
@@ -1323,6 +1421,71 @@ App.Editor = (function(){
     return {x:n.x+p.rx, y:n.y+p.ry, nx:p.nx, ny:p.ny, type:p.type};
   }
   function diagram(){ const b=App.State.current(); return b? b.diagram : {nodes:[],wires:[]}; }
+
+  /* ---- calibrated board parts (created in App.PartEditor) ----
+     A board part stores its geometry (outline/holes/pads/visuals) in native
+     image-pixel coordinates plus a mm-per-pixel scale. On the wiring canvas we
+     draw it physically to scale: everything is rendered inside one sub-group
+     transformed by `scale` (canvas-px per native-px), while the interactive
+     connection pins live in node-local coordinates so wiring works unchanged. */
+  function layoutBoardNode(node,comp){
+    const part=comp.part;
+    const s = App.PartEditor.partScale(part) || part.mmPerPx || 0.25; // mm per native px
+    const bb = App.PartEditor.partBBox(part);                          // native px bounds
+    const scale = CANVAS_PX_PER_MM * s;                                // canvas px per native px
+    const w=Math.max(46, bb.w*scale), h=Math.max(34, bb.h*scale);
+    const cx=w/2, cy=h/2;
+    const out={w,h,board:true,part,scale,bb,s,pins:[]};
+    (part.pads||[]).forEach((pd,i)=>{
+      const px=(pd.x-bb.x)*scale, py=(pd.y-bb.y)*scale;
+      // wire leaves the pad pointing away from the board centre
+      let nx=px-cx, ny=py-cy; const m=Math.hypot(nx,ny)||1; nx/=m; ny/=m;
+      const pin=(node.pins||[])[i]||{};
+      const horiz=Math.abs(nx)>=Math.abs(ny);
+      out.pins.push({ id:pin.id||("p"+i), name:pin.name||pd.name||"PAD", type:pin.type||pd.type||"signal",
+        rx:px, ry:py, nx, ny,
+        anchor: horiz?(nx>0?"start":"end"):"middle",
+        lx: horiz?(nx>0?9:-9):0, ly: horiz?3:(ny>0?13:-7) });
+    });
+    return out;
+  }
+  function svgImage(href,attrs){ const im=el("image",attrs); im.setAttribute("href",href); im.setAttributeNS("http://www.w3.org/1999/xlink","href",href); return im; }
+  function boardShape(o,s,stroke,fill){
+    // o lives in native px; its real size (wMm/hMm) converts to native px via /s
+    const w=Math.max(1,(o.wMm||1.5)/s), h=Math.max(1,(o.hMm||o.wMm||1.5)/s);
+    const g=el("g",{transform:`translate(${o.x} ${o.y}) rotate(${o.rot||0})`});
+    const sh=o.shape||"circle"; const com={fill,stroke,"stroke-width":1.2,"vector-effect":"non-scaling-stroke"};
+    if(o.side==="back") com["stroke-dasharray"]="3 2"; // rear-side pads drawn dashed
+    if(sh==="circle") g.appendChild(el("circle",Object.assign({cx:0,cy:0,r:w/2},com)));
+    else if(sh==="oval") g.appendChild(el("ellipse",Object.assign({cx:0,cy:0,rx:w/2,ry:h/2},com)));
+    else { const rx=sh==="roundrect"?Math.min(w,h)*0.28:0; g.appendChild(el("rect",Object.assign({x:-w/2,y:-h/2,width:w,height:h,rx},com))); }
+    return g;
+  }
+  function buildBoardNodeEl(n,comp,lay){
+    const part=lay.part, scale=lay.scale, bb=lay.bb, s=lay.s;
+    const g=el("g",{class:"node board","data-node":n.id, transform:`translate(${n.x} ${n.y})`, style:"cursor:grab"});
+    // selection / drag target sits behind everything
+    g.appendChild(el("rect",{class:"node-rect board"+(n.locked?" locked":""), x:-2,y:-2,width:lay.w+4,height:lay.h+4, rx:7}));
+    // native-coordinate artwork (image, outline, holes, visuals, pads)
+    const inner=el("g",{transform:`translate(${-bb.x*scale} ${-bb.y*scale}) scale(${scale})`, style:"pointer-events:none"});
+    if(part.image && part.imageW){ inner.appendChild(svgImage(part.image,{x:0,y:0,width:part.imageW,height:part.imageH,opacity:0.9,preserveAspectRatio:"none"})); }
+    const op=(part.outline&&part.outline.points)||[];
+    if(op.length>=3){ inner.appendChild(el("path",{d:App.PartEditor.outlinePath(op,part.outline.closed!==false), fill:"var(--panel-2)","fill-opacity":part.image?0:0.5, stroke:"var(--text-faint)","stroke-width":1.4,"vector-effect":"non-scaling-stroke","stroke-linejoin":"round"})); }
+    (part.holes||[]).forEach(hh=> inner.appendChild(el("circle",{cx:hh.x,cy:hh.y,r:Math.max(0.5,(hh.d||3)/2/s), fill:"var(--bg)", stroke:"var(--text-faint)","stroke-width":1,"vector-effect":"non-scaling-stroke"})));
+    (part.visuals||[]).forEach(v=> inner.appendChild(boardShape(v,s,"var(--w-motor)","rgba(192,107,255,.18)")));
+    (part.pads||[]).forEach(p=> inner.appendChild(boardShape(p,s,"var(--w-uart)","rgba(58,155,255,.22)")));
+    g.appendChild(inner);
+    // interactive connection pins (node-local coords) — same shape as box nodes
+    lay.pins.forEach(p=>{
+      const pg=el("g",{class:"pin","data-node":n.id,"data-pin":p.id, transform:`translate(${p.rx} ${p.ry})`});
+      pg.appendChild(el("circle",{class:"pdot", r:DOT_R, stroke:App.Config.pinColor(p)}));
+      if(S.settings.labels!==false){ const t=el("text",{class:"plabel board", x:p.lx, y:p.ly||0, "text-anchor":p.anchor}); t.textContent=p.name; pg.appendChild(t); }
+      g.appendChild(pg);
+    });
+    const title=el("text",{class:"node-title board", x:0, y:-7}); title.textContent=trunc(n.name||comp.name||"Part",24); g.appendChild(title);
+    if(n.locked){ g.appendChild(el("path",{d:lockPath(lay.w-12,lay.h-10), fill:"none", stroke:"var(--text-faint)","stroke-width":1.4})); }
+    return g;
+  }
 
   /* ---- wire path ---- */
   function wirePath(a,b,style){
@@ -1353,6 +1516,7 @@ App.Editor = (function(){
   function buildNodeEl(n){
     const comp=App.State.findComp(n.compId)||{};
     const lay=layouts[n.id];
+    if(lay && lay.board) return buildBoardNodeEl(n,comp,lay);
     const g=el("g",{class:"node","data-node":n.id, transform:`translate(${n.x} ${n.y})`, style:"cursor:grab"});
     const cat=App.Config.CAT_MAP[comp.category]||App.Config.CAT_MAP.other;
     g.appendChild(el("rect",{class:"node-rect"+(n.locked?" locked":""), x:0,y:0,width:lay.w,height:lay.h,rx:9}));
@@ -1669,6 +1833,25 @@ App.Editor = (function(){
   function syncToggleUI(){ $("#routeCurved").classList.toggle("on",S.settings.route==="curved"); $("#routeStraight").classList.toggle("on",S.settings.route==="straight"); $("#gridToggle").classList.toggle("on",S.settings.grid); $("#labelToggle").classList.toggle("on",S.settings.labels); }
 
   /* ---- export SVG / PNG ---- */
+  // Render a calibrated board part to a static-SVG string in absolute coords.
+  function exportBoardNode(n,comp,l,C){
+    const part=l.part, scale=l.scale, bb=l.bb, s=l.s;
+    const NX=x=> n.x + (x-bb.x)*scale, NY=y=> n.y + (y-bb.y)*scale;
+    let out="";
+    if(part.image && part.imageW){ out+=`<image x="${NX(0)}" y="${NY(0)}" width="${part.imageW*scale}" height="${part.imageH*scale}" preserveAspectRatio="none" opacity="0.9" xlink:href="${part.image}" href="${part.image}"/>`; }
+    const op=(part.outline&&part.outline.points)||[];
+    if(op.length>=3){ const dPath=App.PartEditor.outlinePath(op.map(p=>({...p,x:NX(p.x),y:NY(p.y)})), part.outline.closed!==false);
+      out+=`<path d="${dPath}" fill="${C.node}" fill-opacity="${part.image?0:0.5}" stroke="${C.line}" stroke-width="1.5"/>`; }
+    (part.holes||[]).forEach(h=>{ out+=`<circle cx="${NX(h.x)}" cy="${NY(h.y)}" r="${Math.max(1,(h.d||3)/2/s*scale)}" fill="${C.bg}" stroke="${C.sub}" stroke-width="1.2"/>`; });
+    (part.pads||[]).forEach(p=>{ const w=Math.max(1,(p.wMm||1.5)/s*scale), hh=Math.max(1,(p.hMm||p.wMm||1.5)/s*scale); const cx=NX(p.x),cy=NY(p.y);
+      const inner=p.shape==="circle"?`<circle r="${w/2}"`:p.shape==="oval"?`<ellipse rx="${w/2}" ry="${hh/2}"`:`<rect x="${-w/2}" y="${-hh/2}" width="${w}" height="${hh}" rx="${p.shape==="roundrect"?Math.min(w,hh)*0.28:0}"`;
+      out+=`<g transform="translate(${cx} ${cy}) rotate(${p.rot||0})">${inner} fill="rgba(58,155,255,.25)" stroke="#3a9bff" stroke-width="1.2"/></g>`; });
+    l.pins.forEach(p=>{ const px=n.x+p.rx,py=n.y+p.ry; const col=App.Config.pinColor(p);
+      out+=`<circle cx="${px}" cy="${py}" r="${DOT_R}" fill="${C.pinfill}" stroke="${col}" stroke-width="1.6"/>`;
+      out+=`<text x="${px+p.lx}" y="${py+(p.ly||0)+3}" fill="${C.lbl}" font-size="9" text-anchor="${p.anchor}">${esc(p.name)}</text>`; });
+    out+=`<text x="${n.x}" y="${n.y-7}" fill="${C.sub}" font-size="11">${esc(trunc(n.name||comp.name||"Part",24))}</text>`;
+    return out;
+  }
   function buildExportSVG(){
     const d=diagram();
     const lay={}; d.nodes.forEach(n=>lay[n.id]=layoutNode(n));
@@ -1679,7 +1862,7 @@ App.Editor = (function(){
     const w=maxx-minx, h=maxy-miny;
     const C={bg:"#0c0f14",node:"#151b24",head:"#202935",line:"#26303d",text:"#e7ecf2",sub:"#63707f",pinfill:"#0c0f14",lbl:"#9aa6b5"};
     const abs=(nid,pid)=>{const n=d.nodes.find(x=>x.id===nid);const p=lay[nid].pins.find(x=>x.id===pid);return p?{x:n.x+p.rx,y:n.y+p.ry,nx:p.nx,ny:p.ny}:null;};
-    let s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${minx} ${miny} ${w} ${h}" width="${w}" height="${h}" font-family="JetBrains Mono, monospace">`;
+    let s=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${minx} ${miny} ${w} ${h}" width="${w}" height="${h}" font-family="JetBrains Mono, monospace">`;
     s+=`<rect x="${minx}" y="${miny}" width="${w}" height="${h}" fill="${C.bg}"/>`;
     // wires
     d.wires.forEach(wr=>{ const a=abs(wr.from.node,wr.from.pin),b=abs(wr.to.node,wr.to.pin); if(!a||!b)return;
@@ -1689,6 +1872,7 @@ App.Editor = (function(){
     });
     // nodes
     d.nodes.forEach(n=>{ const l=lay[n.id]; const comp=App.State.findComp(n.compId)||{}; const cat=App.Config.CAT_MAP[comp.category]||App.Config.CAT_MAP.other;
+      if(l.board){ s+=exportBoardNode(n,comp,l,C); return; }
       s+=`<rect x="${n.x}" y="${n.y}" width="${l.w}" height="${l.h}" rx="9" fill="${C.node}" stroke="${C.line}" stroke-width="1.5"/>`;
       s+=`<path d="M${n.x} ${n.y+9} a9 9 0 0 1 9 -9 h${l.w-18} a9 9 0 0 1 9 9 v${HEAD_H-9} h${-l.w} z" fill="${C.head}"/>`;
       s+=`<text x="${n.x+11}" y="${n.y+16}" fill="${C.text}" font-size="13" font-weight="600">${esc(trunc(n.name||comp.name||"",17))}</text>`;
@@ -1729,6 +1913,772 @@ App.Editor = (function(){
     autoArrange, clearAll, setRoute, toggleGrid, toggleLabels, syncToggleUI,
     exportSVG, exportPNG, zoomBy, getPinDef,
     get view(){return view;} };
+})();
+
+/* ========================================================================
+   App.PartEditor — guided "board part" builder.
+   Lets the user turn a board photo (or imported SVG outline) into a
+   physically-accurate, calibrated custom part: mounting holes, traced
+   outline, named solder pads (real connection points) and cosmetic visual
+   markers. The result is a normal custom component (saved in localStorage)
+   that carries an extra `part` geometry object; App.Editor renders it to
+   scale on the wiring canvas. Geometry is stored in native image-pixel
+   coordinates plus a mm-per-pixel scale derived from a known hole distance.
+
+   Sub-modules (share the closure state, grouped for readability):
+     Calibration  mounting holes + pattern helpers + mm scale
+     Outline      traced board edge (straight / curved segments)
+     Pads         solder pads (electrical connection points)
+     Visuals      cosmetic component markers
+     ImportExport SVG import, DXF placeholder, JSON export, migration
+   ======================================================================== */
+App.PartEditor = (function(){
+  const NS="http://www.w3.org/2000/svg";
+  const XLINK="http://www.w3.org/1999/xlink";
+  const SCHEMA=3;
+  const HANDLE=5;        // outline handle radius, screen px
+  const DEF_HOLE=3;      // default mounting-hole diameter (mm, ~M3)
+  const DEF_PAD=1.6;     // default solder-pad size (mm)
+  // Base angles (deg) for each constrained mounting pattern; holes[0],[1] are
+  // adjacent so their distance is the entered "spacing" used for calibration.
+  const PAT_BASE={ square:[45,135,225,315], diamond:[0,90,180,270], triangle:[-90,30,150] };
+  const STEPS=["Image","Scale & holes","Outline","Pads","Components","Preview & save"];
+  const PAD_SHAPES=[["circle","Circle"],["rect","Rectangle"],["roundrect","Rounded rect"],["oval","Oval"]];
+  const VISUAL_KINDS=[["mcu","MCU"],["gyro","Gyro / IMU"],["usb","USB port"],["plug","Plug / socket"],["regulator","Regulator"],["button","Button"],["antenna","Antenna conn."],["barometer","Barometer"],["led","LED"],["other","Other"]];
+
+  // ---- working state ----
+  let opened=false, editId=null;
+  let part=null, meta=null;
+  let step=1, tool="select", sel=null, lastSpacing=30.5, side="front";
+  let view={x:0,y:0,k:1};
+  let stage=null, vp=null;
+  let drag=null, pan=null;
+  let undoStack=[], redoStack=[];
+  let boundMove=null, boundUp=null;
+
+  /* ---- small helpers ---- */
+  const num=v=> v===""||v==null?"":(isNaN(+v)?"":(+v));
+  function el(tag,a){ const n=document.createElementNS(NS,tag); if(a) for(const k in a) n.setAttribute(k,a[k]); return n; }
+  function svgImage(href,a){ const im=el("image",a); im.setAttribute("href",href); im.setAttributeNS(XLINK,"href",href); return im; }
+  function blankPart(){ return {schemaVersion:SCHEMA, image:"", imageW:0, imageH:0, imageBack:"", imageBackW:0, imageBackH:0, calibration:null, mmPerPx:null, pattern:null, holes:[], outline:{closed:false, points:[]}, pads:[], visuals:[]}; }
+  // Image for the currently-shown side (front photo doubles as the canvas/thumb).
+  function currentImage(){ return side==="back" ? {data:part.imageBack, w:part.imageBackW, h:part.imageBackH} : {data:part.image, w:part.imageW, h:part.imageH}; }
+  function blankMeta(){ return {name:"",brand:"",model:"",category:"fc",description:"",notes:"",weight:"",price:"",currentDraw:"",voltageMin:"",voltageMax:""}; }
+  function metaFromComp(c){ return {name:c.name||"",brand:c.brand||"",model:c.model||"",category:c.category||"fc",description:c.description||"",notes:c.notes||"",weight:c.weight??"",price:c.price??"",currentDraw:c.currentDraw??"",voltageMin:c.voltageMin??"",voltageMax:c.voltageMax??""}; }
+  const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+  function holeById(id){ return (part.holes||[]).find(h=>h.id===id); }
+  function padById(id){ return (part.pads||[]).find(p=>p.id===id); }
+  function pointById(id){ return (part.outline.points||[]).find(p=>p.id===id); }
+  function visualById(id){ return (part.visuals||[]).find(v=>v.id===id); }
+  function itemRef(kind,id){ return kind==="hole"?holeById(id):kind==="pad"?padById(id):kind==="visual"?visualById(id):kind==="point"?pointById(id):null; }
+  function selIs(kind,id){ return sel && sel.kind===kind && sel.id===id; }
+
+  /* ---- geometry exposed to App.Editor / App.Store ---- */
+  // mm per native px, derived from the calibration hole-pair distance.
+  function partScale(p){
+    const cal=p&&p.calibration;
+    if(cal){ const a=(p.holes||[]).find(h=>h.id===cal.aId), b=(p.holes||[]).find(h=>h.id===cal.bId);
+      if(a&&b){ const d=Math.hypot(a.x-b.x,a.y-b.y); if(d>0) return cal.mm/d; } }
+    return (p&&p.mmPerPx)||null;
+  }
+  // Native-px bounding box of the part (outline first, then image, then items).
+  function partBBox(p){
+    const pts=(p&&p.outline&&p.outline.points)||[];
+    const box=(arr,pad)=>{ let a=1e9,b=1e9,c=-1e9,e=-1e9; arr.forEach(o=>{a=Math.min(a,o.x);b=Math.min(b,o.y);c=Math.max(c,o.x);e=Math.max(e,o.y);}); return {x:a-pad,y:b-pad,w:Math.max(1,c-a+2*pad),h:Math.max(1,e-b+2*pad)}; };
+    if(pts.length>=2) return box(pts,0);
+    if(p&&p.imageW) return {x:0,y:0,w:p.imageW,h:p.imageH};
+    const all=[...((p&&p.pads)||[]),...((p&&p.holes)||[]),...((p&&p.visuals)||[])];
+    if(all.length) return box(all,20);
+    return {x:0,y:0,w:200,h:150};
+  }
+  // Build an SVG path with mixed straight / curved vertices. A vertex flagged
+  // `curve` contributes a Catmull-Rom tangent (smooth); otherwise it stays a
+  // hard corner. Works for both open (editing) and closed loops.
+  function outlinePath(pts,closed){
+    const n=pts.length;
+    if(n<2) return n===1?`M${pts[0].x} ${pts[0].y}`:"";
+    const at=i=> closed ? pts[((i%n)+n)%n] : pts[Math.max(0,Math.min(n-1,i))];
+    let d=`M${pts[0].x} ${pts[0].y}`;
+    const segs=closed?n:n-1;
+    for(let i=0;i<segs;i++){
+      const p0=at(i-1), p1=at(i), p2=at(i+1), p3=at(i+2);
+      const t1=p1.curve?1:0, t2=p2.curve?1:0;
+      const c1x=p1.x+(p2.x-p0.x)/6*t1, c1y=p1.y+(p2.y-p0.y)/6*t1;
+      const c2x=p2.x-(p3.x-p1.x)/6*t2, c2y=p2.y-(p3.y-p1.y)/6*t2;
+      d+=` C${c1x.toFixed(2)} ${c1y.toFixed(2)} ${c2x.toFixed(2)} ${c2y.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+    }
+    if(closed) d+=" Z";
+    return d;
+  }
+  function migratePart(p){
+    if(!p||typeof p!=="object") return p;
+    p.holes=p.holes||[]; p.pads=p.pads||[]; p.visuals=p.visuals||[];
+    if(!p.outline||!Array.isArray(p.outline.points)) p.outline={closed:false,points:[]};
+    if(p.pattern===undefined) p.pattern=null;
+    if(p.imageBack===undefined){ p.imageBack=""; p.imageBackW=0; p.imageBackH=0; }
+    p.holes.forEach(h=>h.id=h.id||uid("hole"));
+    // v2 -> v3: pads / visuals gain a board side (default front)
+    p.pads.forEach(o=>{ o.id=o.id||uid("pad"); if(!o.side) o.side="front"; });
+    p.visuals.forEach(o=>{ o.id=o.id||uid("vis"); if(!o.side) o.side="front"; });
+    p.outline.points.forEach(o=>o.id=o.id||uid("pt"));
+    p.schemaVersion=SCHEMA;
+    return p;
+  }
+  /* ---- white-background outline auto-detection ----
+     Threshold the photo against its (white) background, keep the largest
+     foreground blob, trace its boundary (Moore-neighbour) and simplify
+     (Ramer–Douglas–Peucker). All analysis runs on a downscaled copy for
+     speed, then points are mapped back to native image pixels. */
+  function rdp(pts,eps){
+    if(pts.length<3) return pts.slice();
+    const d2=(p,a,b)=>{ const dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1; return Math.abs((p.x-a.x)*dy-(p.y-a.y)*dx)/l; };
+    const rec=(s,e)=>{ let dm=0,idx=-1; for(let i=s+1;i<e;i++){ const d=d2(pts[i],pts[s],pts[e]); if(d>dm){dm=d;idx=i;} }
+      return dm>eps ? rec(s,idx).slice(0,-1).concat(rec(idx,e)) : [pts[s],pts[e]]; };
+    return rec(0,pts.length-1);
+  }
+  function largestBlob(mask,W,H){
+    const lbl=new Int32Array(W*H); let best=0,bestSize=0,cur=0; const st=[];
+    for(let i=0;i<mask.length;i++){ if(mask[i]&&!lbl[i]){ cur++; let size=0; st.length=0; st.push(i); lbl[i]=cur;
+      while(st.length){ const q=st.pop(); size++; const x=q%W,y=(q/W)|0;
+        if(x>0&&mask[q-1]&&!lbl[q-1]){lbl[q-1]=cur;st.push(q-1);} if(x<W-1&&mask[q+1]&&!lbl[q+1]){lbl[q+1]=cur;st.push(q+1);}
+        if(y>0&&mask[q-W]&&!lbl[q-W]){lbl[q-W]=cur;st.push(q-W);} if(y<H-1&&mask[q+W]&&!lbl[q+W]){lbl[q+W]=cur;st.push(q+W);} }
+      if(size>bestSize){bestSize=size;best=cur;} } }
+    const out=new Uint8Array(W*H); for(let i=0;i<mask.length;i++) out[i]=lbl[i]===best?1:0; return out;
+  }
+  function traceBoundary(mask,W,H){
+    let start=-1; for(let i=0;i<mask.length&&start<0;i++) if(mask[i]) start=i;
+    if(start<0) return [];
+    const sx=start%W, sy=(start/W)|0;
+    const dirs=[[-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1]];
+    const isF=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&mask[y*W+x]===1;
+    const out=[]; let px=sx,py=sy,dir=0,safety=0,max=W*H*8;
+    do{ out.push({x:px,y:py});
+      let found=false, begin=(dir+6)%8;
+      for(let i=0;i<8;i++){ const d=(begin+i)%8, nx=px+dirs[d][0], ny=py+dirs[d][1]; if(isF(nx,ny)){ px=nx;py=ny;dir=d;found=true;break; } }
+      if(!found) break; safety++;
+    } while((px!==sx||py!==sy) && safety<max);
+    return out;
+  }
+  // Otsu's method: optimal foreground/background split from a luminance histogram.
+  function otsu(hist,total){
+    let sum=0; for(let i=0;i<256;i++) sum+=i*hist[i];
+    let sumB=0,wB=0,mx=0,thr=0;
+    for(let i=0;i<256;i++){ wB+=hist[i]; if(!wB) continue; const wF=total-wB; if(!wF) break;
+      sumB+=i*hist[i]; const mB=sumB/wB, mF=(sum-sumB)/wF, between=wB*wF*(mB-mF)*(mB-mF);
+      if(between>mx){ mx=between; thr=i; } }
+    return thr/255;
+  }
+  // Light moving-average smoothing of a closed boundary to remove pixel staircase.
+  function smoothClosed(pts,win){
+    const n=pts.length; if(n<win*2+1) return pts;
+    const out=new Array(n);
+    for(let i=0;i<n;i++){ let sx=0,sy=0; for(let k=-win;k<=win;k++){ const p=pts[((i+k)%n+n)%n]; sx+=p.x; sy+=p.y; } out[i]={x:sx/(win*2+1),y:sy/(win*2+1)}; }
+    return out;
+  }
+  function detectOutline(dataURL,natW,natH,cb){
+    const im=new Image();
+    im.onload=()=>{ try{
+      const maxDim=760, scd=Math.min(1,maxDim/Math.max(im.naturalWidth,im.naturalHeight));
+      const W=Math.max(8,Math.round(im.naturalWidth*scd)), H=Math.max(8,Math.round(im.naturalHeight*scd));
+      const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
+      ctx.drawImage(im,0,0,W,H); const data=ctx.getImageData(0,0,W,H).data;
+      const L=new Float32Array(W*H), hist=new Uint32Array(256);
+      for(let i=0;i<W*H;i++){ const l=0.299*data[i*4]+0.587*data[i*4+1]+0.114*data[i*4+2]; L[i]=l/255; hist[Math.min(255,l|0)]++; }
+      const bg=(L[0]+L[W-1]+L[(H-1)*W]+L[(H-1)*W+W-1])/4;
+      // Otsu separates the dark board from the white background and naturally
+      // rejects soft drop-shadows; fall back to a margin below bg if degenerate.
+      let thr=otsu(hist,W*H); if(thr>=bg-0.04 || thr<0.08) thr=clamp(bg-0.16,0.35,0.9);
+      const mask=new Uint8Array(W*H); for(let i=0;i<W*H;i++) mask[i]= L[i]<thr ?1:0;
+      const blob=largestBlob(mask,W,H);
+      let cont=traceBoundary(blob,W,H); if(cont.length<8){ cb(null); return; }
+      cont=smoothClosed(smoothClosed(cont,2),2);
+      let eps=Math.max(1.2,maxDim*0.004), simp=rdp(cont,eps);
+      while(simp.length>170){ eps*=1.35; simp=rdp(cont,eps); }
+      const kx=natW/W, ky=natH/H;
+      cb(simp.map(p=>({id:uid("pt"),x:+(p.x*kx).toFixed(1),y:+(p.y*ky).toFixed(1),curve:false})));
+    }catch(e){ cb(null); } };
+    im.onerror=()=>cb(null);
+    im.src=dataURL;
+  }
+  /* ---- constrained mounting patterns ----
+     Holes are generated from a {kind,cx,cy,radius,rot,mm} descriptor so they
+     always keep the chosen shape; dragging a hole rotates+scales the whole
+     pattern about its centre. Calibration uses the first two (adjacent) holes. */
+  function genPatternHoles(recreate){
+    const pat=part.pattern; if(!pat) return;
+    const base=PAT_BASE[pat.kind]||PAT_BASE.square;
+    const d=(part.holes[0]&&part.holes[0].d)||DEF_HOLE;
+    if(recreate || part.holes.length!==base.length) part.holes=base.map(()=>({id:uid("hole"),x:0,y:0,d}));
+    base.forEach((a,i)=>{ const ang=(a+pat.rot)*Math.PI/180; part.holes[i].x=pat.cx+Math.cos(ang)*pat.radius; part.holes[i].y=pat.cy+Math.sin(ang)*pat.radius; });
+    part.calibration={aId:part.holes[0].id,bId:part.holes[1].id,mm:pat.mm};
+  }
+
+  /* ---- undo / redo (whole-part snapshots) ---- */
+  function snapshot(){ undoStack.push(JSON.stringify(part)); if(undoStack.length>60) undoStack.shift(); redoStack=[]; }
+  function undo(){ if(!undoStack.length) return; redoStack.push(JSON.stringify(part)); part=JSON.parse(undoStack.pop()); sel=null; renderAll(); }
+  function redo(){ if(!redoStack.length) return; undoStack.push(JSON.stringify(part)); part=JSON.parse(redoStack.pop()); sel=null; renderAll(); }
+
+  /* ---- open / close ---- */
+  function open(id){
+    editId=id||null;
+    const c=id?App.State.findComp(id):null;
+    if(c && c.part){ part=migratePart(JSON.parse(JSON.stringify(c.part))); meta=metaFromComp(c); }
+    else { part=blankPart(); meta=blankMeta(); }
+    step=1; tool="select"; sel=null; side="front"; view={x:0,y:0,k:1}; undoStack=[]; redoStack=[]; opened=true;
+    buildModal();
+  }
+  function close(){
+    opened=false;
+    if(boundMove){ window.removeEventListener("pointermove",boundMove); window.removeEventListener("pointerup",boundUp); boundMove=boundUp=null; }
+    const m=document.getElementById("modal"); if(m) m.classList.remove("part-editor");
+    App.UI.closeModal();
+  }
+  function isOpen(){ return opened; }
+  function onKey(e){
+    if(e.key==="Escape"){ e.preventDefault(); if(tool!=="select"){ setTool("select"); } else if(sel){ select(null,null); } return; }
+    const t=e.target&&e.target.tagName; if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+    if(e.key==="Delete"||e.key==="Backspace"){ e.preventDefault(); deleteSel(); }
+    else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){ e.preventDefault(); e.shiftKey?redo():undo(); }
+    else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="y"){ e.preventDefault(); redo(); }
+    else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="d"){ e.preventDefault(); if(sel&&sel.kind==="pad") Pads.duplicate(); }
+  }
+
+  /* ---- modal skeleton ---- */
+  function ic(n){ const m={
+    cursor:'<path d="M4 3l7 17 2.2-7.2L20.5 11z"/>',
+    plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+    image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+    vector:'<polygon points="12 2 21 7.5 21 16.5 12 22 3 16.5 3 7.5"/>',
+    trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',
+    check:'<polyline points="20 6 9 17 4 12"/>',
+    download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+    minus:'<line x1="5" y1="12" x2="19" y2="12"/>',
+    x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+    magic:'<path d="M15 4V2M15 10V8M12.5 6.5h2M17.5 6.5h2M5 19l9-9 1 1-9 9z"/><path d="M14 7l3 3"/>',
+    fit:'<path d="M3 8V5a2 2 0 0 1 2-2h3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/>'
+  }; return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${m[n]||m.plus}</svg>`; }
+  function buildModal(){
+    const html=`
+      <div class="pe-head">
+        <h3 style="font-family:var(--font-display);font-size:15px;letter-spacing:.02em;white-space:nowrap">${editId?"Edit":"New"} board part</h3>
+        <div class="pe-steps" id="peSteps"></div>
+        <button class="btn icon sm ghost" id="peClose" style="margin-left:auto" title="Close">${ic("x")}</button>
+      </div>
+      <div class="pe-main">
+        <div class="pe-col pe-left"><div class="pe-pad" id="peLeft"></div></div>
+        <div class="pe-col pe-stage-wrap">
+          <svg class="pe-stage" id="peStage" xmlns="http://www.w3.org/2000/svg"></svg>
+          <div class="pe-stage-hint" id="peHint"></div>
+          <div class="pe-stage-tools">
+            <button class="btn icon sm ghost" id="peZoomOut" title="Zoom out">${ic("minus")}</button>
+            <button class="btn icon sm ghost" id="peZoomFit" title="Fit">${ic("fit")}</button>
+            <button class="btn icon sm ghost" id="peZoomIn" title="Zoom in">${ic("plus")}</button>
+          </div>
+        </div>
+        <div class="pe-col pe-right"><div class="pe-pad" id="peRight"></div></div>
+      </div>
+      <div class="pe-foot">
+        <button class="btn sm" id="peBack">Back</button>
+        <span style="font-family:var(--font-mono);font-size:11.5px;color:var(--text-faint)" id="peStepLbl"></span>
+        <div style="flex:1"></div>
+        <button class="btn sm ghost" id="peExport" title="Export this part as JSON">${ic("download")}Export .json</button>
+        <button class="btn primary sm" id="peNext">Next</button>
+      </div>`;
+    App.UI.openModal(html);
+    const m=document.getElementById("modal"); m.classList.add("part-editor");
+    stage=document.getElementById("peStage");
+    stage.addEventListener("pointerdown",onDown);
+    stage.addEventListener("wheel",onWheel,{passive:false});
+    boundMove=onMove; boundUp=onUp;
+    window.addEventListener("pointermove",boundMove); window.addEventListener("pointerup",boundUp);
+    bind("peClose",close); bind("peBack",()=>gotoStep(step-1));
+    bind("peNext",()=> step<6?gotoStep(step+1):save());
+    bind("peExport",doExport);
+    bind("peZoomIn",()=>zoomCenter(1.2)); bind("peZoomOut",()=>zoomCenter(1/1.2)); bind("peZoomFit",fitView);
+    requestAnimationFrame(()=>{ fitView(); renderAll(); });
+  }
+  function bind(id,fn){ const e=document.getElementById(id); if(e) e.onclick=fn; }
+
+  /* ---- step / tool / selection ---- */
+  function gotoStep(n){ step=clamp(n,1,6); tool="select"; sel=null; renderAll(); }
+  function setTool(t){ tool=(tool===t&&t!=="select")?"select":t; renderLeft(); updateHint(); }
+  function select(kind,id){ sel=id?{kind,id}:null; renderRight(); renderStage(); }
+  function deleteSel(){
+    if(!sel) return; snapshot();
+    if(sel.kind==="hole"){ part.holes=part.holes.filter(h=>h.id!==sel.id); const cal=part.calibration; if(cal&&(cal.aId===sel.id||cal.bId===sel.id)) part.calibration=null; }
+    else if(sel.kind==="pad") part.pads=part.pads.filter(o=>o.id!==sel.id);
+    else if(sel.kind==="visual") part.visuals=part.visuals.filter(o=>o.id!==sel.id);
+    else if(sel.kind==="point"){ part.outline.points=part.outline.points.filter(o=>o.id!==sel.id); if(part.outline.points.length<3) part.outline.closed=false; }
+    sel=null; renderRight(); renderStage();
+  }
+
+  /* ---- view transform ---- */
+  function toWorld(cx,cy){ const r=stage.getBoundingClientRect(); return {x:(cx-r.left-view.x)/view.k, y:(cy-r.top-view.y)/view.k}; }
+  function applyTransform(){ if(vp) vp.setAttribute("transform",`translate(${view.x} ${view.y}) scale(${view.k})`); }
+  function zoomAt(sx,sy,f){ const wx=(sx-view.x)/view.k, wy=(sy-view.y)/view.k; view.k=clamp(view.k*f,0.05,14); view.x=sx-wx*view.k; view.y=sy-wy*view.k; renderStage(); }
+  function zoomCenter(f){ const r=stage.getBoundingClientRect(); zoomAt(r.width/2,r.height/2,f); }
+  function onWheel(e){ e.preventDefault(); const r=stage.getBoundingClientRect(); zoomAt(e.clientX-r.left,e.clientY-r.top,e.deltaY<0?1.12:1/1.12); }
+  function contentBoxForFit(){ const img=currentImage(); if(img.data&&img.w) return {x:0,y:0,w:img.w,h:img.h}; return partBBox(part); }
+  function fitView(){ const r=stage.getBoundingClientRect(); if(!r.width) return; const bb=contentBoxForFit(); const pad=34;
+    const k=clamp(Math.min((r.width-pad*2)/bb.w,(r.height-pad*2)/bb.h),0.05,14);
+    view.k=k; view.x=pad+(r.width-pad*2-bb.w*k)/2-bb.x*k; view.y=pad+(r.height-pad*2-bb.h*k)/2-bb.y*k; renderStage(); }
+
+  /* ---- pointer interaction ---- */
+  function onDown(e){
+    if(!opened) return;
+    if(stage.setPointerCapture) try{ stage.setPointerCapture(e.pointerId); }catch(_){}
+    const world=toWorld(e.clientX,e.clientY);
+    const tgt=e.target.closest&&e.target.closest("[data-kind]");
+    if(e.button===1){ pan={sx:e.clientX,sy:e.clientY,vx:view.x,vy:view.y}; return; }
+    if(tgt){ const kind=tgt.getAttribute("data-kind"), id=tgt.getAttribute("data-id");
+      // constrained-pattern handles drag the whole pattern, not a single hole
+      if(kind==="phole"||kind==="pcenter"){ snapshot(); const pat=part.pattern;
+        drag={kind,idx:+id,start:world,orig:{cx:pat.cx,cy:pat.cy,radius:pat.radius,rot:pat.rot},moved:false,undoLen:undoStack.length-1};
+        // square/diamond: dragging a hole pins the OPPOSITE hole, so two drags
+        // place both precisely on the real holes (triangle stays centre-based).
+        if(kind==="phole"){ const base=PAT_BASE[pat.kind]||PAT_BASE.square; if(base.length===4){ const opp=part.holes[(drag.idx+2)%4]; if(opp) drag.anchor={x:opp.x,y:opp.y}; } }
+        return; }
+      select(kind,id); const it=itemRef(kind,id);
+      snapshot(); drag={kind,id,start:world,orig:it?{x:it.x,y:it.y}:{x:0,y:0},moved:false,undoLen:undoStack.length-1};
+      return; }
+    if(tool==="addhole") Calibration.addHole(world);
+    else if(tool==="point") Outline.addPoint(world);
+    else if(tool==="addpad") Pads.add(world);
+    else if(tool==="addvisual") Visuals.add(world);
+    else { if(sel) select(null,null); pan={sx:e.clientX,sy:e.clientY,vx:view.x,vy:view.y}; }
+  }
+  function onMove(e){
+    if(pan){ view.x=pan.vx+(e.clientX-pan.sx); view.y=pan.vy+(e.clientY-pan.sy); applyTransform(); return; }
+    if(!drag) return;
+    const world=toWorld(e.clientX,e.clientY); const pat=part.pattern;
+    if(drag.kind==="pcenter" && pat){ pat.cx=drag.orig.cx+(world.x-drag.start.x); pat.cy=drag.orig.cy+(world.y-drag.start.y); genPatternHoles(); drag.moved=true; renderStage(); return; }
+    if(drag.kind==="phole" && pat){
+      const base=(PAT_BASE[pat.kind]||PAT_BASE.square)[drag.idx]*Math.PI/180;
+      if(drag.anchor){ const a=drag.anchor; pat.cx=(world.x+a.x)/2; pat.cy=(world.y+a.y)/2; }
+      pat.radius=Math.max(6,Math.hypot(world.x-pat.cx,world.y-pat.cy));
+      pat.rot=(Math.atan2(world.y-pat.cy,world.x-pat.cx)-base)*180/Math.PI;
+      genPatternHoles(); drag.moved=true; renderStage(); return;
+    }
+    const it=itemRef(drag.kind,drag.id); if(!it) return;
+    it.x=drag.orig.x+(world.x-drag.start.x); it.y=drag.orig.y+(world.y-drag.start.y);
+    drag.moved=true; renderStage();
+  }
+  function onUp(){
+    if(pan){ pan=null; return; }
+    if(drag){ if(!drag.moved) undoStack.length=Math.max(0,drag.undoLen); drag=null; renderRight(); }
+  }
+
+  /* ====================================================================
+     Sub-module: Calibration — mounting holes + scale
+     ==================================================================== */
+  const Calibration={
+    // manual hole placement (free mode — drops the constrained pattern)
+    addHole(world){ snapshot(); part.pattern=null; const h={id:uid("hole"),x:world.x,y:world.y,d:(part.holes[0]&&part.holes[0].d)||DEF_HOLE}; part.holes.push(h);
+      if(!part.calibration && part.holes.length>=2){ const a=part.holes[part.holes.length-2]; part.calibration={aId:a.id,bId:h.id,mm:lastSpacing}; }
+      select("hole",h.id); },
+    placePattern(kind,spacingMm){ snapshot(); lastSpacing=spacingMm;
+      // prefer the traced outline's bbox (tighter on the real board) over the image
+      const bb=part.outline.points.length>=3 ? partBBox(part) : contentBoxForFit();
+      const radius=Math.max(24,Math.min(bb.w,bb.h)*0.42);
+      const d=(part.holes[0]&&part.holes[0].d)||DEF_HOLE;
+      part.pattern={kind, cx:bb.x+bb.w/2, cy:bb.y+bb.h/2, radius, rot:0, mm:spacingMm};
+      if(part.holes.length) part.holes[0]={...part.holes[0],d}; // keep diameter
+      genPatternHoles(true);
+      sel=null; renderRight(); renderStage(); },
+    setPatternSize(px){ if(!part.pattern) return; part.pattern.radius=Math.max(6,px); genPatternHoles(); renderStage(); },
+    setPatternRot(deg){ if(!part.pattern) return; part.pattern.rot=deg; genPatternHoles(); renderStage(); },
+    setSpacing(mm){ lastSpacing=mm; if(part.pattern){ part.pattern.mm=mm; genPatternHoles(); } else if(part.calibration){ part.calibration.mm=mm; } renderStage(); },
+    setHoleDia(d){ (part.holes||[]).forEach(h=>h.d=d); renderStage(); },
+    clear(){ snapshot(); part.holes=[]; part.calibration=null; part.pattern=null; sel=null; renderRight(); renderStage(); }
+  };
+
+  /* ====================================================================
+     Sub-module: Outline — traced board edge
+     ==================================================================== */
+  const Outline={
+    addPoint(world){ snapshot(); const pts=part.outline.points;
+      if(pts.length>=3 && !part.outline.closed && dist(pts[0],world)<12/view.k){ part.outline.closed=true; select(null,null); return; }
+      const p={id:uid("pt"),x:world.x,y:world.y,curve:false}; pts.push(p); select("point",p.id); },
+    toggleClose(){ snapshot(); if(part.outline.points.length>=3) part.outline.closed=!part.outline.closed; renderAll(); },
+    toggleCurve(id){ const p=pointById(id); if(!p) return; snapshot(); p.curve=!p.curve; renderRight(); renderStage(); },
+    // auto-trace the board edge from the current side's white-background photo
+    autoDetect(){ const img=currentImage(); if(!img.data){ App.UI.toast("Upload a board photo first","warn"); return; }
+      App.UI.toast("Detecting outline…","ok");
+      detectOutline(img.data,img.w,img.h,pts=>{
+        if(!pts||pts.length<3){ App.UI.toast("Couldn't detect an outline — trace it by hand","warn"); return; }
+        snapshot(); part.outline={closed:true,points:pts}; renderAll(); App.UI.toast("Outline detected ("+pts.length+" points) — tidy it up if needed","ok");
+      });
+    }
+  };
+
+  /* ====================================================================
+     Sub-module: Pads — solder pads (real connection points)
+     ==================================================================== */
+  const Pads={
+    add(world){ snapshot(); const p={id:uid("pad"),x:world.x,y:world.y,name:"P"+(part.pads.length+1),type:"signal",voltage:"",shape:"circle",wMm:DEF_PAD,hMm:DEF_PAD,rot:0,side}; part.pads.push(p); select("pad",p.id); },
+    duplicate(){ if(!sel||sel.kind!=="pad") return; const p=padById(sel.id); if(!p) return; snapshot();
+      // offset the copy by ~2mm (in native px) so it doesn't sit exactly on top
+      const off=partScale(part)?2/partScale(part):12;
+      const c=Object.assign({},p,{id:uid("pad"),x:p.x+off,y:p.y+off,name:(p.name||"P")+" copy"}); part.pads.push(c); select("pad",c.id); }
+  };
+
+  /* ====================================================================
+     Sub-module: Visuals — cosmetic markers
+     ==================================================================== */
+  const Visuals={
+    add(world){ snapshot(); const v={id:uid("vis"),x:world.x,y:world.y,label:"IC",kind:"mcu",shape:"rect",wMm:6,hMm:6,rot:0,notes:"",side}; part.visuals.push(v); select("visual",v.id); }
+  };
+
+  /* ====================================================================
+     Sub-module: ImportExport — SVG import, DXF placeholder, JSON
+     ==================================================================== */
+  const ImportExport={
+    pickImage(which){ const fi=document.getElementById("filePartImg"); fi.value=""; fi.onchange=()=>{ const f=fi.files[0]; if(!f) return; const rd=new FileReader();
+      rd.onload=()=>{ const im=new Image(); im.onload=()=>{ snapshot();
+        if(which==="back"){ part.imageBack=rd.result; part.imageBackW=im.naturalWidth; part.imageBackH=im.naturalHeight; side="back"; }
+        else { part.image=rd.result; part.imageW=im.naturalWidth; part.imageH=im.naturalHeight; side="front"; }
+        fitView(); renderAll(); }; im.src=rd.result; }; rd.readAsDataURL(f); }; fi.click(); },
+    pickSVG(){ const fi=document.getElementById("filePartSvg"); fi.value=""; fi.onchange=()=>{ const f=fi.files[0]; if(!f) return; const rd=new FileReader(); rd.onload=()=>ImportExport.fromSVG(rd.result); rd.readAsText(f); }; fi.click(); },
+    // Convert the first polygon/polyline/path of an SVG into an editable outline.
+    fromSVG(text){
+      try{
+        const doc=new DOMParser().parseFromString(text,"image/svg+xml");
+        const svgEl=doc.querySelector("svg"); if(!svgEl) throw 0;
+        let pts=null;
+        const poly=svgEl.querySelector("polygon,polyline");
+        if(poly){ const nums=(poly.getAttribute("points")||"").trim().split(/[\s,]+/).map(Number).filter(n=>!isNaN(n));
+          const arr=[]; for(let i=0;i+1<nums.length;i+=2) arr.push({id:uid("pt"),x:nums[i],y:nums[i+1],curve:false}); pts=arr; }
+        if(!pts){ const pathEl=svgEl.querySelector("path");
+          if(pathEl){ const host=el("svg",{style:"position:absolute;width:0;height:0;opacity:0;pointer-events:none"}); const p=el("path",{d:pathEl.getAttribute("d")||""});
+            host.appendChild(p); document.body.appendChild(host);
+            const L=p.getTotalLength(); const N=clamp(Math.round(L/9),12,64); const arr=[];
+            for(let i=0;i<N;i++){ const q=p.getPointAtLength(L*i/N); arr.push({id:uid("pt"),x:q.x,y:q.y,curve:false}); }
+            document.body.removeChild(host); pts=arr; } }
+        if(!pts||pts.length<3) throw 0;
+        let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9; pts.forEach(p=>{minx=Math.min(minx,p.x);miny=Math.min(miny,p.y);maxx=Math.max(maxx,p.x);maxy=Math.max(maxy,p.y);});
+        pts.forEach(p=>{p.x=p.x-minx+20; p.y=p.y-miny+20;});
+        snapshot(); part.outline={closed:true,points:pts}; part.image=""; part.imageW=Math.ceil(maxx-minx+40); part.imageH=Math.ceil(maxy-miny+40);
+        fitView(); renderAll(); App.UI.toast("SVG outline imported — calibrate the size next","ok");
+      }catch(e){ App.UI.toast("Could not read that SVG outline","err"); }
+    },
+    // TODO: DXF import. DXF is an ASCII/binary CAD format; a minimal parser for
+    // LINE/LWPOLYLINE/ARC entities would let us import laser-cut footprints
+    // without a dependency. Deferred — SVG import covers the common case.
+    importDXF(){ App.UI.toast("DXF import is coming soon — use an SVG outline or a photo for now","warn"); }
+  };
+
+  /* ---- build the saved component ---- */
+  function buildComp(){
+    const sc=partScale(part)||0.25; const bb=partBBox(part);
+    part.schemaVersion=SCHEMA; part.mmPerPx=sc;
+    part.sizeMm={w:round(bb.w*sc,1),h:round(bb.h*sc,1)}; part.originPx={x:round(bb.x,2),y:round(bb.y,2)};
+    return {
+      id: editId||uid("part"),
+      name:(meta.name||"").trim(), brand:(meta.brand||"").trim(), model:(meta.model||"").trim(),
+      category:meta.category||"other", description:meta.description||"", notes:meta.notes||"",
+      weight:num(meta.weight), price:num(meta.price), currentDraw:num(meta.currentDraw),
+      voltageMin:num(meta.voltageMin), voltageMax:num(meta.voltageMax),
+      width:part.sizeMm.w, height:part.sizeMm.h,
+      mountSpacing: part.calibration? String(part.calibration.mm):"",
+      image: part.image||"", custom:true, part:part,
+      pins:(part.pads||[]).map(p=>({name:p.name||"PAD",type:p.type||"signal",side:null}))
+    };
+  }
+  function save(){
+    if(!(meta.name||"").trim()){ App.UI.toast("Give the part a name (Preview & save step)","warn"); gotoStep(6); const ni=document.getElementById("m-name"); if(ni) ni.focus(); return; }
+    const comp=buildComp();
+    App.Store.saveCustomComponent(comp);
+    App.UI.fullRefresh(); App.UI.switchPane("library");
+    close(); App.UI.toast("Custom part saved to your library","ok");
+  }
+  function doExport(){ if(!(meta.name||"").trim()){ App.UI.toast("Name the part first (Preview & save step)","warn"); return; } App.Store.exportCustomPart(buildComp()); }
+
+  /* ====================================================================
+     Rendering
+     ==================================================================== */
+  function renderAll(){ renderSteps(); renderLeft(); renderRight(); renderStage(); updateFoot(); updateHint(); }
+  function renderSteps(){ const host=document.getElementById("peSteps"); if(!host) return;
+    host.innerHTML=STEPS.map((s,i)=>`<div class="pe-step ${step===i+1?'active':''}" data-step="${i+1}"><span class="n">${i+1}</span>${esc(s)}</div>`).join("");
+    host.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>gotoStep(+b.dataset.step));
+  }
+  function updateFoot(){ const lbl=document.getElementById("peStepLbl"); if(lbl) lbl.textContent=`Step ${step} of 6`;
+    const back=document.getElementById("peBack"); if(back) back.disabled=step<=1;
+    const next=document.getElementById("peNext"); if(next) next.textContent=step<6?"Next":"Save part";
+  }
+  function updateHint(){ const h=document.getElementById("peHint"); if(!h) return;
+    const txt= step===1?(part.image||part.outline.points.length?"Source loaded — continue to Scale & holes":"Upload a board image or import an SVG to begin")
+      : step===2?(tool==="addhole"?"Click to drop a mounting hole":"Drag holes to align them · set the known distance on the right")
+      : step===3?(tool==="point"?"Click to add outline points · click the first point to close the loop":"Drag points · select one to toggle straight / curved")
+      : step===4?(tool==="addpad"?"Click to place a solder pad":"Drag pads · edit the selected pad on the right")
+      : step===5?(tool==="addvisual"?"Click to place a component marker":"Drag markers · edit the selected one on the right")
+      : "Live preview — this is how the part appears on the wiring canvas";
+    h.textContent=txt;
+  }
+  function toolBtn(t,label,icon){ return `<button class="pe-tool ${tool===t?'active':''}" data-tool="${t}">${ic(icon)}${esc(label)}</button>`; }
+  // range slider + number box bound to the same value (id-r / id-n)
+  function sliderRow(id,label,min,max,stepv,val){
+    return `<div class="pe-field"><label>${esc(label)}</label><div class="pe-slider">
+      <input type="range" id="${id}-r" min="${min}" max="${max}" step="${stepv}" value="${val}">
+      <input type="number" id="${id}-n" min="${min}" max="${max}" step="${stepv}" value="${val}"></div></div>`;
+  }
+  // Front / rear board side switcher (only meaningful once an image exists)
+  function sideToggle(){
+    return `<div class="pe-secttl">Board side</div><div class="pe-seg" id="pe-side">
+      <button class="${side==='front'?'on':''}" data-side="front">Front</button>
+      <button class="${side==='back'?'on':''}" data-side="back">Rear${part.imageBack?'':' +'}</button></div>`;
+  }
+  function renderLeft(){
+    const L=document.getElementById("peLeft"); if(!L) return;
+    let h=`<div class="pe-secttl">Step ${step} — ${esc(STEPS[step-1])}</div>`;
+    const showSide = step!==2 && step!==6;
+    if(step===1){
+      h+=`<div class="pe-instr">Upload a clear, top-down photo of each side on a <b>white background</b> (most FPV parts are sold this way), or import an SVG outline.</div>`;
+      h+=`<button class="pe-tool" id="t-upfront">${ic("image")}${part.image?"Replace":"Upload"} front image</button>`;
+      h+=`<button class="pe-tool" id="t-upback">${ic("image")}${part.imageBack?"Replace":"Upload"} rear image</button>`;
+      h+=`<button class="pe-tool" id="t-impsvg">${ic("vector")}Import SVG outline</button>`;
+      h+=`<button class="pe-tool" id="t-impdxf">${ic("vector")}Import DXF <span style="color:var(--text-faint)">(soon)</span></button>`;
+      if(part.image||part.imageBack||part.outline.points.length) h+=`<button class="pe-tool" id="t-clrimg">${ic("trash")}Remove ${side==='back'?'rear image':'front image / outline'}</button>`;
+    } else if(step===2){
+      h+=`<div class="pe-instr">Pick a pattern, then drag <b>two opposite holes</b> onto the real ones — the set stays square / diamond / triangle. Enter the real spacing to set the scale, or use the sliders.</div>`;
+      h+=`<div class="pe-tools">${toolBtn("select","Select / move","cursor")}${toolBtn("addhole","Add hole (free)","plus")}</div>`;
+    } else if(step===3){
+      h+=`<div class="pe-instr">Auto-detect the edge from a white-background photo, or click to drop points by hand. Click the first point again to close. Select a point to toggle <b>straight</b> / <b>curved</b>.</div>`;
+      h+=`<button class="pe-tool" id="t-auto">${ic("magic")}Auto-detect outline</button>`;
+      h+=`<div class="pe-tools">${toolBtn("select","Select / move","cursor")}${toolBtn("point","Add point","plus")}</div>`;
+      h+=`<button class="pe-tool" id="t-close">${ic("check")}${part.outline.closed?"Re-open loop":"Close loop"}</button>`;
+    } else if(step===4){
+      h+=`<div class="pe-instr">Add solder pads where wires connect (GND, 5V, TX1…). Each pad becomes a real connection point on the wiring canvas. Use the <b>side</b> switch for front vs rear pads.</div>`;
+      h+=`<div class="pe-tools">${toolBtn("select","Select / move","cursor")}${toolBtn("addpad","Add pad","plus")}</div>`;
+    } else if(step===5){
+      h+=`<div class="pe-instr">Place visual markers (MCU, USB, gyro…) so the board looks realistic. These are cosmetic unless you give them pad data.</div>`;
+      h+=`<div class="pe-tools">${toolBtn("select","Select / move","cursor")}${toolBtn("addvisual","Add component","plus")}</div>`;
+    } else {
+      const sc=partScale(part); const bb=partBBox(part);
+      h+=`<div class="pe-instr">Review the preview, fill in the details on the right, then <b>Save part</b>. It works just like a built-in part.</div>`;
+      h+=`<div class="pe-secttl">Summary</div><div class="pe-instr">`+
+         `Holes: <b>${part.holes.length}</b> · Pads: <b>${part.pads.length}</b> · Markers: <b>${part.visuals.length}</b><br>`+
+         `Outline: <b>${part.outline.points.length} pts ${part.outline.closed?"(closed)":"(open)"}</b><br>`+
+         `Scale: <b>${sc?round(1/sc,2)+" px/mm":"not set"}</b><br>`+
+         `Size: <b>${sc?round(bb.w*sc,1)+" × "+round(bb.h*sc,1)+" mm":"—"}</b></div>`;
+    }
+    if(showSide && (part.image||part.imageBack)) h+=sideToggle();
+    L.innerHTML=h;
+    L.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>setTool(b.dataset.tool));
+    L.querySelectorAll("#pe-side [data-side]").forEach(b=>b.onclick=()=>{ side=b.dataset.side; sel=null; fitView(); renderAll(); });
+    bind("t-upfront",()=>ImportExport.pickImage("front"));
+    bind("t-upback",()=>ImportExport.pickImage("back"));
+    bind("t-impsvg",()=>ImportExport.pickSVG());
+    bind("t-impdxf",()=>ImportExport.importDXF());
+    bind("t-auto",()=>Outline.autoDetect());
+    bind("t-clrimg",()=>{ snapshot();
+      if(side==="back"){ part.imageBack="";part.imageBackW=0;part.imageBackH=0; }
+      else { part.image="";part.imageW=0;part.imageH=0; part.outline={closed:false,points:[]}; }
+      sel=null; renderAll(); });
+    bind("t-close",()=>Outline.toggleClose());
+  }
+  function row(o,i,kind,label){ return `<div class="pe-row ${selIs(kind,o.id)?'sel':''}" data-row="${kind}:${o.id}"><span class="nm">${esc(label)}</span></div>`; }
+  function listBind(host){ host.querySelectorAll("[data-row]").forEach(r=>r.onclick=()=>{ const [k,id]=r.dataset.row.split(":"); select(k,id); }); }
+  function renderRight(){
+    const R=document.getElementById("peRight"); if(!R) return;
+    let h="";
+    if(step===1){
+      h+=`<div class="pe-secttl">Source</div>`;
+      h+=`<div class="pe-instr">Front: <b>${part.image?part.imageW+"×"+part.imageH+"px":"—"}</b><br>Rear: <b>${part.imageBack?part.imageBackW+"×"+part.imageBackH+"px":"—"}</b>`+
+         (part.outline.points.length?`<br>Outline: <b>${part.outline.points.length} pts</b>`:'')+`</div>`;
+      if(!part.image&&!part.imageBack&&!part.outline.points.length) h+=`<div class="pe-empty">Upload a front (and ideally rear) photo to begin.</div>`;
+    } else if(step===2){
+      const cal=part.calibration||{}; const sc=partScale(part); const bb=partBBox(part); const pat=part.pattern;
+      const holeDia=(part.holes[0]&&part.holes[0].d)||DEF_HOLE;
+      h+=`<div class="pe-secttl">Mounting pattern</div>
+        <div class="pe-grid2">
+          <button class="btn sm ${pat&&pat.kind==='square'?'primary':''}" data-pat="square">Square</button>
+          <button class="btn sm ${pat&&pat.kind==='diamond'?'primary':''}" data-pat="diamond">Diamond</button>
+          <button class="btn sm ${pat&&pat.kind==='triangle'?'primary':''}" data-pat="triangle">Triangle</button>
+          <button class="btn sm" data-pat="clear">Clear</button>
+        </div>
+        <div class="pe-field"><label>${pat?'Hole spacing':'Known distance'} (mm)</label><input id="r-spacing" type="number" step="any" value="${pat?pat.mm:(cal.mm??lastSpacing)}"></div>`;
+      if(pat){
+        h+=sliderRow("r-psize","Pattern size (px)",10,Math.max(200,Math.round(Math.max(bb.w,bb.h))),1,Math.round(pat.radius));
+        h+=sliderRow("r-protp","Pattern rotation°",-180,180,1,Math.round(pat.rot));
+      }
+      h+=sliderRow("r-hd","Hole Ø (mm)",0.5,8,0.1,holeDia);
+      if(part.holes.length>=2) h+=`<div class="pe-instr">Scale: <b>${sc?round(1/sc,2)+" px/mm":"—"}</b>${sc?` · board ≈ ${round(bb.w*sc,1)}×${round(bb.h*sc,1)} mm`:''}</div>`;
+      else h+=`<div class="pe-empty">Pick a pattern, or add ≥2 holes, to set the scale.</div>`;
+      if(!pat && part.holes.length>=2){
+        const opt=selId=>part.holes.map((hh,i)=>`<option value="${hh.id}" ${selId===hh.id?'selected':''}>Hole ${i+1}</option>`).join("");
+        h+=`<div class="pe-secttl">Calibration pair</div><div class="pe-grid2">
+            <div class="pe-field"><label>From</label><select id="r-cala">${opt(cal.aId)}</select></div>
+            <div class="pe-field"><label>To</label><select id="r-calb">${opt(cal.bId)}</select></div></div>`;
+      }
+      h+=`<div class="pe-secttl">Holes (${part.holes.length})${pat?' · constrained':''}</div>`+(part.holes.length?`<div class="pe-list">${part.holes.map((o,i)=>row(o,i,"hole","Hole "+(i+1))).join("")}</div>`:`<div class="pe-empty">None yet.</div>`);
+    } else if(step===3){
+      h+=`<div class="pe-secttl">Outline</div><div class="pe-instr">${part.outline.points.length} points · ${part.outline.closed?'<b>closed</b>':'open'}</div>`;
+      if(sel&&sel.kind==="point"){ const p=pointById(sel.id); if(p) h+=`<div class="pe-secttl">Selected point</div>
+        <button class="btn sm ${p.curve?'primary':''}" id="r-curve" style="width:100%">${p.curve?'Curved corner':'Straight corner'}</button>
+        <button class="btn sm danger" id="r-delpt" style="width:100%;margin-top:6px">Delete point</button>`; }
+      h+=`<div class="pe-secttl">Points</div>`+(part.outline.points.length?`<div class="pe-list">${part.outline.points.map((o,i)=>row(o,i,"point",(i+1)+". "+(o.curve?"curved":"straight"))).join("")}</div>`:`<div class="pe-empty">None yet.</div>`);
+    } else if(step===4){
+      const sp=part.pads.filter(o=>(o.side||'front')===side);
+      h+=`<div class="pe-secttl">${side==='back'?'Rear':'Front'} pads (${sp.length})</div>`+(sp.length?`<div class="pe-list">${sp.map((o,i)=>row(o,i,"pad",(o.name||"Pad")+" · "+(App.Config.PIN_MAP[o.type]||{}).label)).join("")}</div>`:`<div class="pe-empty">None on this side — pick "Add pad".</div>`);
+      if(sel&&sel.kind==="pad"){ const p=padById(sel.id); if(p) h+=padForm(p); }
+    } else if(step===5){
+      const sv=part.visuals.filter(o=>(o.side||'front')===side);
+      h+=`<div class="pe-secttl">${side==='back'?'Rear':'Front'} markers (${sv.length})</div>`+(sv.length?`<div class="pe-list">${sv.map((o,i)=>row(o,i,"visual",(o.label||"Marker")+" · "+(VISUAL_KINDS.find(k=>k[0]===o.kind)||[,o.kind])[1])).join("")}</div>`:`<div class="pe-empty">None on this side — pick "Add component".</div>`);
+      if(sel&&sel.kind==="visual"){ const v=visualById(sel.id); if(v) h+=visualForm(v); }
+    } else {
+      h+=metaForm();
+    }
+    R.innerHTML=h;
+    listBind(R);
+    wireRight();
+  }
+  function padForm(p){
+    const typeOpts=App.Config.PIN_TYPES.map(t=>`<option value="${t.key}" ${p.type===t.key?'selected':''}>${esc(t.label)}</option>`).join("");
+    const shapeOpts=PAD_SHAPES.map(s=>`<option value="${s[0]}" ${p.shape===s[0]?'selected':''}>${s[1]}</option>`).join("");
+    return `<div class="pe-secttl">Selected pad</div>
+      <div class="pe-field"><label>Label</label><input id="r-pname" value="${esc(p.name||'')}" placeholder="e.g. GND, 5V, TX1"></div>
+      <div class="pe-grid2">
+        <div class="pe-field"><label>Type</label><select id="r-ptype">${typeOpts}</select></div>
+        <div class="pe-field"><label>Voltage</label><input id="r-pvolt" value="${esc(p.voltage||'')}" placeholder="opt."></div>
+        <div class="pe-field"><label>Shape</label><select id="r-pshape">${shapeOpts}</select></div>
+        <div class="pe-field"><label>Side</label><select id="r-pside"><option value="front" ${(p.side||'front')==='front'?'selected':''}>Front</option><option value="back" ${p.side==='back'?'selected':''}>Rear</option></select></div>
+      </div>
+      ${sliderRow("r-pw","Width (mm)",0.3,40,0.1,p.wMm)}
+      ${sliderRow("r-ph","Height (mm)",0.3,40,0.1,p.hMm)}
+      ${sliderRow("r-prot","Rotation°",-180,180,1,p.rot||0)}
+      <div class="pe-grid2" style="margin-top:6px">
+        <button class="btn sm" id="r-pdup">Duplicate</button>
+        <button class="btn sm danger" id="r-pdel">Delete</button>
+      </div>`;
+  }
+  function visualForm(v){
+    const kindOpts=VISUAL_KINDS.map(k=>`<option value="${k[0]}" ${v.kind===k[0]?'selected':''}>${k[1]}</option>`).join("");
+    const shapeOpts=PAD_SHAPES.map(s=>`<option value="${s[0]}" ${v.shape===s[0]?'selected':''}>${s[1]}</option>`).join("");
+    return `<div class="pe-secttl">Selected marker</div>
+      <div class="pe-field"><label>Label</label><input id="r-vlabel" value="${esc(v.label||'')}"></div>
+      <div class="pe-grid2">
+        <div class="pe-field"><label>Kind</label><select id="r-vkind">${kindOpts}</select></div>
+        <div class="pe-field"><label>Shape</label><select id="r-vshape">${shapeOpts}</select></div>
+        <div class="pe-field"><label>Side</label><select id="r-vside"><option value="front" ${(v.side||'front')==='front'?'selected':''}>Front</option><option value="back" ${v.side==='back'?'selected':''}>Rear</option></select></div>
+      </div>
+      ${sliderRow("r-vw","Width (mm)",0.5,60,0.1,v.wMm)}
+      ${sliderRow("r-vh","Height (mm)",0.5,60,0.1,v.hMm)}
+      ${sliderRow("r-vrot","Rotation°",-180,180,1,v.rot||0)}
+      <div class="pe-field"><label>Notes</label><textarea id="r-vnotes" rows="2">${esc(v.notes||'')}</textarea></div>
+      <button class="btn sm danger" id="r-vdel" style="width:100%;margin-top:6px">Delete marker</button>`;
+  }
+  function metaForm(){
+    const catOpts=App.Config.CATEGORIES.map(c=>`<option value="${c.key}" ${meta.category===c.key?'selected':''}>${esc(c.label)}</option>`).join("");
+    return `<div class="pe-secttl">Part details</div>
+      <div class="pe-field"><label>Name *</label><input id="m-name" value="${esc(meta.name)}" placeholder="e.g. SpeedyBee F405 V4"></div>
+      <div class="pe-grid2">
+        <div class="pe-field"><label>Brand / mfr</label><input id="m-brand" value="${esc(meta.brand)}"></div>
+        <div class="pe-field"><label>Model</label><input id="m-model" value="${esc(meta.model)}"></div>
+        <div class="pe-field"><label>Category</label><select id="m-cat">${catOpts}</select></div>
+        <div class="pe-field"><label>Weight (g)</label><input id="m-weight" type="number" step="any" value="${esc(meta.weight)}"></div>
+        <div class="pe-field"><label>Price (USD)</label><input id="m-price" type="number" step="any" value="${esc(meta.price)}"></div>
+        <div class="pe-field"><label>Current (A)</label><input id="m-cur" type="number" step="any" value="${esc(meta.currentDraw)}"></div>
+        <div class="pe-field"><label>Voltage min</label><input id="m-vmin" type="number" step="any" value="${esc(meta.voltageMin)}"></div>
+        <div class="pe-field"><label>Voltage max</label><input id="m-vmax" type="number" step="any" value="${esc(meta.voltageMax)}"></div>
+      </div>
+      <div class="pe-field"><label>Description</label><input id="m-desc" value="${esc(meta.description)}"></div>
+      <div class="pe-field"><label>Notes</label><textarea id="m-notes" rows="2">${esc(meta.notes)}</textarea></div>`;
+  }
+  // range + number combo bound to the same value (id-r / id-n) → apply(numeric)
+  function linkSlider(id,apply){
+    const r=document.getElementById(id+"-r"), n=document.getElementById(id+"-n"); if(!r&&!n) return;
+    const h=(srcVal,other)=>{ const val=num(srcVal); if(val==="") return; if(other) other.value=val; apply(val); };
+    if(r) r.addEventListener("input",()=>h(r.value,n));
+    if(n) n.addEventListener("input",()=>h(n.value,r));
+  }
+  // Attach handlers for whichever right-panel fields are present.
+  function wireRight(){
+    const v=(id)=>document.getElementById(id);
+    const oninput=(id,fn)=>{ const e=v(id); if(e) e.addEventListener("input",()=>{ fn(e.value); }); };
+    const onchange=(id,fn)=>{ const e=v(id); if(e) e.addEventListener("change",()=>{ fn(e.value); }); };
+    // step 2 — patterns, sliders, calibration
+    document.querySelectorAll("[data-pat]").forEach(b=>b.onclick=()=>{ const sp=num(v("r-spacing")?v("r-spacing").value:lastSpacing)||30.5; if(b.dataset.pat==="clear") Calibration.clear(); else Calibration.placePattern(b.dataset.pat,sp); });
+    oninput("r-spacing",val=>{ const n=num(val); if(n!=="") Calibration.setSpacing(n); });
+    linkSlider("r-psize",val=>Calibration.setPatternSize(val));
+    linkSlider("r-protp",val=>Calibration.setPatternRot(val));
+    linkSlider("r-hd",val=>Calibration.setHoleDia(val));
+    onchange("r-cala",val=>{ snapshot(); part.calibration=part.calibration||{mm:lastSpacing}; part.calibration.aId=val; renderStage(); });
+    onchange("r-calb",val=>{ snapshot(); part.calibration=part.calibration||{mm:lastSpacing}; part.calibration.bId=val; renderStage(); });
+    // step 3
+    bind("r-curve",()=>Outline.toggleCurve(sel.id));
+    bind("r-delpt",deleteSel);
+    // step 4 (pad)
+    oninput("r-pname",val=>{ const p=padById(sel.id); if(p){ p.name=val; renderStage(); } });
+    onchange("r-ptype",val=>{ const p=padById(sel.id); if(p){ p.type=val; renderStage(); } });
+    oninput("r-pvolt",val=>{ const p=padById(sel.id); if(p) p.voltage=val; });
+    onchange("r-pshape",val=>{ const p=padById(sel.id); if(p){ p.shape=val; renderStage(); } });
+    onchange("r-pside",val=>{ const p=padById(sel.id); if(p){ p.side=val; side=val; sel=null; renderAll(); } });
+    linkSlider("r-pw",val=>{ const p=padById(sel.id); if(p){ p.wMm=val; renderStage(); } });
+    linkSlider("r-ph",val=>{ const p=padById(sel.id); if(p){ p.hMm=val; renderStage(); } });
+    linkSlider("r-prot",val=>{ const p=padById(sel.id); if(p){ p.rot=val; renderStage(); } });
+    bind("r-pdup",()=>Pads.duplicate());
+    bind("r-pdel",deleteSel);
+    // step 5 (visual)
+    oninput("r-vlabel",val=>{ const o=visualById(sel.id); if(o){ o.label=val; renderStage(); } });
+    onchange("r-vkind",val=>{ const o=visualById(sel.id); if(o) o.kind=val; });
+    onchange("r-vshape",val=>{ const o=visualById(sel.id); if(o){ o.shape=val; renderStage(); } });
+    onchange("r-vside",val=>{ const o=visualById(sel.id); if(o){ o.side=val; side=val; sel=null; renderAll(); } });
+    linkSlider("r-vw",val=>{ const o=visualById(sel.id); if(o){ o.wMm=val; renderStage(); } });
+    linkSlider("r-vh",val=>{ const o=visualById(sel.id); if(o){ o.hMm=val; renderStage(); } });
+    linkSlider("r-vrot",val=>{ const o=visualById(sel.id); if(o){ o.rot=val; renderStage(); } });
+    oninput("r-vnotes",val=>{ const o=visualById(sel.id); if(o) o.notes=val; });
+    bind("r-vdel",deleteSel);
+    // step 6 (meta)
+    [["m-name","name"],["m-brand","brand"],["m-model","model"],["m-desc","description"],["m-notes","notes"]].forEach(([id,k])=>oninput(id,val=>meta[k]=val));
+    [["m-weight","weight"],["m-price","price"],["m-cur","currentDraw"],["m-vmin","voltageMin"],["m-vmax","voltageMax"]].forEach(([id,k])=>oninput(id,val=>meta[k]=val));
+    onchange("m-cat",val=>meta.category=val);
+  }
+  function txt(x,y,str){ const t=el("text",{class:"ol-lbl",x,y,"text-anchor":"middle","font-size":(11/view.k).toFixed(2)}); t.textContent=str; return t; }
+  function stageShape(o,sc,cls,interactive){
+    const w=Math.max(2, sc?(o.wMm||DEF_PAD)/sc:(o.wMm||DEF_PAD)*4), hh=Math.max(2, sc?((o.hMm||o.wMm||DEF_PAD)/sc):((o.hMm||o.wMm||DEF_PAD)*4));
+    const kind=cls==="ol-pad"?"pad":"visual";
+    const g=el("g",{transform:`translate(${o.x} ${o.y}) rotate(${o.rot||0})`});
+    if(interactive){ g.setAttribute("data-kind",kind); g.setAttribute("data-id",o.id); g.setAttribute("style","pointer-events:all;cursor:grab"); }
+    else g.setAttribute("style","pointer-events:none");
+    const c=cls+(selIs(kind,o.id)?" ol-sel":""); const sh=o.shape||"rect";
+    if(sh==="circle") g.appendChild(el("circle",{class:c,cx:0,cy:0,r:w/2}));
+    else if(sh==="oval") g.appendChild(el("ellipse",{class:c,cx:0,cy:0,rx:w/2,ry:hh/2}));
+    else { const rx=sh==="roundrect"?Math.min(w,hh)*0.28:0; g.appendChild(el("rect",{class:c,x:-w/2,y:-hh/2,width:w,height:hh,rx})); }
+    return g;
+  }
+  function renderStage(){
+    if(!stage) return;
+    const g=el("g",{id:"peVp"});
+    const sc=partScale(part); const pat=part.pattern;
+    // image for the current side
+    const img=currentImage();
+    if(img.data&&img.w) g.appendChild(svgImage(img.data,{x:0,y:0,width:img.w,height:img.h,class:"ol-image"}));
+    // outline (shared across sides)
+    const op=part.outline.points;
+    if(op.length>=2) g.appendChild(el("path",{class:"ol-outline"+(part.outline.closed?"":" open"), d:outlinePath(op,part.outline.closed)}));
+    // calibration line
+    if(part.calibration){ const a=holeById(part.calibration.aId), b=holeById(part.calibration.bId);
+      if(a&&b){ g.appendChild(el("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y, stroke:"var(--accent)","stroke-width":1,"stroke-dasharray":"4 3","vector-effect":"non-scaling-stroke",style:"pointer-events:none"}));
+        g.appendChild(txt((a.x+b.x)/2,(a.y+b.y)/2-6/view.k, part.calibration.mm+" mm")); } }
+    // mounting holes (shared). With a pattern, holes drag the whole set.
+    (part.holes||[]).forEach((hh,i)=>{ const isCal=part.calibration&&(hh.id===part.calibration.aId||hh.id===part.calibration.bId);
+      const r=sc?Math.max(2,(hh.d||3)/2/sc):7;
+      const c=el("circle",{class:"ol-hole"+(isCal?" cal":"")+(selIs("hole",hh.id)?" ol-sel":""), cx:hh.x, cy:hh.y, r});
+      if(step===2){ c.setAttribute("data-kind",pat?"phole":"hole"); c.setAttribute("data-id",pat?i:hh.id); c.setAttribute("style","pointer-events:all;cursor:grab"); } else c.setAttribute("style","pointer-events:none");
+      g.appendChild(c);
+      g.appendChild(el("circle",{cx:hh.x,cy:hh.y,r:Math.max(1,2/view.k),fill:"var(--amber)",style:"pointer-events:none"})); });
+    // pattern centre handle (step 2)
+    if(step===2 && pat) g.appendChild(el("circle",{class:"ol-handle",cx:pat.cx,cy:pat.cy,r:(HANDLE/view.k),fill:"var(--accent)","data-kind":"pcenter","data-id":"c",style:"pointer-events:all;cursor:move"}));
+    // visuals + pads for the current side only
+    (part.visuals||[]).forEach(o=>{ if((o.side||'front')===side) g.appendChild(stageShape(o,sc,"ol-visual",step===5)); });
+    (part.pads||[]).forEach(o=>{ if((o.side||'front')===side){ g.appendChild(stageShape(o,sc,"ol-pad",step===4)); if(o.name) g.appendChild(txt(o.x,o.y,o.name)); } });
+    // outline point handles (step 3)
+    if(step===3) op.forEach(p=> g.appendChild(el("circle",{class:"ol-handle"+(selIs("point",p.id)?" ol-sel":""), cx:p.x, cy:p.y, r:(HANDLE/view.k), fill:p.curve?"var(--accent)":"var(--amber)","data-kind":"point","data-id":p.id, style:"pointer-events:all;cursor:grab"})));
+    stage.replaceChildren(g); vp=g; applyTransform();
+  }
+
+  return { open, close, isOpen, onKey, partScale, partBBox, outlinePath, migratePart,
+           Calibration, Outline, Pads, Visuals, ImportExport };
 })();
 
 /* ========================================================================
@@ -2413,7 +3363,7 @@ App.UI = (function(){
       card.addEventListener("click",e=>{ if(e.target.closest("[data-edit],[data-delc]"))return; addFromLibrary(id); });
       card.addEventListener("dragstart",e=>e.dataTransfer.setData("text/plain",id));
     });
-    host.querySelectorAll("[data-edit]").forEach(b=>b.onclick=e=>{e.stopPropagation();openComponentModal(b.dataset.edit);});
+    host.querySelectorAll("[data-edit]").forEach(b=>b.onclick=e=>{e.stopPropagation(); const id=b.dataset.edit; const c=App.State.findComp(id); if(c&&c.part) App.PartEditor.open(id); else openComponentModal(id);});
     host.querySelectorAll("[data-delc]").forEach(b=>b.onclick=e=>{e.stopPropagation();const id=b.dataset.delc;const c=App.State.findComp(id);
       confirm("Delete custom component?",`Remove “${c?c.name:id}” from your library? Builds already using it keep their own copy.`,"Delete",()=>{App.Store.deleteCustomComponent(id);renderComponentList();populateFilters();toast("Component deleted","ok");});});
   }
@@ -2480,12 +3430,14 @@ App.UI = (function(){
           <div class="insp-actions">
             <button class="btn sm" id="i-dup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Duplicate</button>
             <button class="btn sm" id="i-lock">${n.locked?"Unlock":"Lock"}</button>
+            ${comp.part&&comp.custom?'<button class="btn sm" id="i-editpart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit part…</button>':''}
             <button class="btn sm danger" id="i-del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Delete</button>
           </div>
         </div>`;
       $("#i-nodename").addEventListener("input",e=>App.Editor.renameNode(e.target.value));
       $("#i-dup").onclick=()=>App.Editor.duplicateSelectedNode();
       $("#i-lock").onclick=()=>App.Editor.toggleLock();
+      if($("#i-editpart")) $("#i-editpart").onclick=()=>App.PartEditor.open(comp.id);
       $("#i-del").onclick=()=>App.Editor.removeSelection();
     } else if(sel.kind==="wire"){
       const w=d.wires.find(x=>x.id===sel.id); if(!w){ title.textContent="Inspector"; host.innerHTML=inspectorEmpty(); return; }
@@ -2704,6 +3656,7 @@ App.UI = (function(){
     $("#filterVoltage").addEventListener("change",e=>{compFilter.voltage=e.target.value;renderComponentList();});
     $("#filterProtocol").addEventListener("change",e=>{compFilter.protocol=e.target.value;renderComponentList();});
     $("#newCompBtn2").onclick=()=>openComponentModal(null);
+    $("#newBoardPartBtn").onclick=()=>App.PartEditor.open(null);
 
     // editor toolbar
     $("#zoomIn").onclick=()=>App.Editor.zoomBy(1.15);
@@ -2733,6 +3686,8 @@ App.UI = (function(){
     $("#themeToggle").onclick=()=>{ closeMenus(); toggleTheme(); };
     $("#dupBuildBtn").onclick=()=>{ closeMenus(); duplicateBuild(); };
     $("#newCompBtn").onclick=()=>{ closeMenus(); openComponentModal(null); };
+    $("#newBoardPartBtn2").onclick=()=>{ closeMenus(); App.PartEditor.open(null); };
+    $("#importPartBtn").onclick=()=>{ closeMenus(); $("#filePartImport").click(); };
     $("#exportThemeBtn").onclick=()=>{ closeMenus(); exportTheme(); };
     $("#helpBtn").onclick=()=>{ closeMenus(); switchView("docs"); };
     $("#deleteBuildBtn").onclick=()=>{ closeMenus(); deleteBuild(); };
@@ -2740,14 +3695,16 @@ App.UI = (function(){
     // file import
     $("#fileImport").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader();
       rd.onload=()=>{ try{ App.Store.importProject(JSON.parse(rd.result)); }catch(err){ toast("Import failed: "+err.message,"err"); } e.target.value=""; }; rd.readAsText(f); });
+    $("#filePartImport").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader();
+      rd.onload=()=>{ try{ App.Store.importCustomPart(JSON.parse(rd.result)); }catch(err){ toast("Import failed: "+err.message,"err"); } e.target.value=""; }; rd.readAsText(f); });
 
     // canvas drag-drop from library
     const wrap=$("#canvasWrap");
     wrap.addEventListener("dragover",e=>{ e.preventDefault(); });
     wrap.addEventListener("drop",e=>{ e.preventDefault(); const id=e.dataTransfer.getData("text/plain"); if(id) addFromLibrary(id); });
 
-    // modal backdrop click closes
-    $("#modalBack").addEventListener("click",e=>{ if(e.target.id==="modalBack") closeModal(); });
+    // modal backdrop click closes (but never the in-progress part editor)
+    $("#modalBack").addEventListener("click",e=>{ if(e.target.id==="modalBack"){ if($("#modal").classList.contains("part-editor")) return; closeModal(); } });
 
     // mobile drawers
     const ws=$("#workspace");
@@ -2758,6 +3715,7 @@ App.UI = (function(){
 
     // keyboard shortcuts
     window.addEventListener("keydown",e=>{
+      if(App.PartEditor.isOpen()){ App.PartEditor.onKey(e); return; }
       if($("#modalBack").classList.contains("open")){ if(e.key==="Escape") closeModal(); return; }
       if(isTyping()) return;
       if((e.key==="Delete"||e.key==="Backspace") && S.selection){ e.preventDefault(); App.Editor.removeSelection(); }

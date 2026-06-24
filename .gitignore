@@ -1,0 +1,43 @@
+# Claude Code — local agent config, sessions, and preview servers
+.claude/
+CLAUDE.local.md
+
+# macOS
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+
+# Logs, caches, temp
+*.log
+*.tmp
+tmp/
+.cache/
+
+# Local scratch test assets (board photos used for manual testing)
+__test_*
+
+# Dependencies / build output (in case tooling is ever added —
+# the app itself stays a single zero-build index.html)
+node_modules/
+dist/
+build/
