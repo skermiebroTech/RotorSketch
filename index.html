@@ -2075,6 +2075,34 @@ App.PartEditor = (function(){
     for(let i=0;i<n;i++){ let sx=0,sy=0; for(let k=-win;k<=win;k++){ const p=pts[((i+k)%n+n)%n]; sx+=p.x; sy+=p.y; } out[i]={x:sx/(win*2+1),y:sy/(win*2+1)}; }
     return out;
   }
+  // Binary morphology (square kernel radius r). grow=true → dilate, false → erode.
+  // Opening (erode→dilate) drops thin protrusions like castellated edge-pads;
+  // closing (dilate→erode) fills small notches — without distorting big features.
+  function morph(mask,W,H,r,grow){
+    const out=new Uint8Array(W*H);
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+      let v=grow?0:1;
+      for(let dy=-r;dy<=r;dy++){ const ny=y+dy; if(ny<0||ny>=H){ if(!grow){v=0;} continue; }
+        for(let dx=-r;dx<=r;dx++){ const nx=x+dx; const m=(nx<0||nx>=W)?0:mask[ny*W+nx];
+          if(grow){ if(m){v=1;dx=dy=r+1;break;} } else { if(!m){v=0;dx=dy=r+1;break;} } } }
+      out[y*W+x]=v;
+    }
+    return out;
+  }
+  // Fill interior holes: any background region NOT reachable from the image
+  // border is enclosed by the board (a mounting hole, gold pad, silkscreen) and
+  // becomes foreground — so we trace the true silhouette, not interior features.
+  function fillHoles(mask,W,H){
+    const reach=new Uint8Array(W*H), st=[];
+    const seed=i=>{ if(!mask[i]&&!reach[i]){ reach[i]=1; st.push(i); } };
+    for(let x=0;x<W;x++){ seed(x); seed((H-1)*W+x); }
+    for(let y=0;y<H;y++){ seed(y*W); seed(y*W+W-1); }
+    while(st.length){ const q=st.pop(), x=q%W, y=(q/W)|0;
+      if(x>0) seed(q-1); if(x<W-1) seed(q+1); if(y>0) seed(q-W); if(y<H-1) seed(q+W); }
+    const out=new Uint8Array(W*H);
+    for(let i=0;i<W*H;i++) out[i]= (mask[i]||!reach[i]) ?1:0;
+    return out;
+  }
   function detectOutline(dataURL,natW,natH,cb){
     const im=new Image();
     im.onload=()=>{ try{
@@ -2085,17 +2113,38 @@ App.PartEditor = (function(){
       const L=new Float32Array(W*H), hist=new Uint32Array(256);
       for(let i=0;i<W*H;i++){ const l=0.299*data[i*4]+0.587*data[i*4+1]+0.114*data[i*4+2]; L[i]=l/255; hist[Math.min(255,l|0)]++; }
       const bg=(L[0]+L[W-1]+L[(H-1)*W]+L[(H-1)*W+W-1])/4;
-      // Otsu separates the dark board from the white background and naturally
-      // rejects soft drop-shadows; fall back to a margin below bg if degenerate.
-      let thr=otsu(hist,W*H); if(thr>=bg-0.04 || thr<0.08) thr=clamp(bg-0.16,0.35,0.9);
-      const mask=new Uint8Array(W*H); for(let i=0;i<W*H;i++) mask[i]= L[i]<thr ?1:0;
+      // The background is solid white and the PCB is dark. So: background = only
+      // the near-white pixels; EVERYTHING darker (black board, gold pads, parts)
+      // is foreground. A threshold just below the white bg captures the whole
+      // board and excludes soft drop-shadows. Otsu is only a fallback for an
+      // unexpectedly non-white background.
+      let thr=clamp(bg-0.15,0.5,0.92); if(bg<0.5){ const o=otsu(hist,W*H); if(o>0.08) thr=o; }
+      let mask=new Uint8Array(W*H); for(let i=0;i<W*H;i++) mask[i]= L[i]<thr ?1:0;
+      // Fill interior holes (mounting holes, gold pads, silkscreen) so tracing
+      // follows ONLY the outer board silhouette and never dips inside the PCB.
+      mask=fillHoles(mask,W,H);
+      mask=morph(morph(mask,W,H,2,true),W,H,2,false);   // close: bridge castellated-edge notches
+      mask=morph(morph(mask,W,H,2,false),W,H,2,true);   // open: drop tiny stray protrusions
       const blob=largestBlob(mask,W,H);
       let cont=traceBoundary(blob,W,H); if(cont.length<8){ cb(null); return; }
-      cont=smoothClosed(smoothClosed(cont,2),2);
-      let eps=Math.max(1.2,maxDim*0.004), simp=rdp(cont,eps);
-      while(simp.length>170){ eps*=1.35; simp=rdp(cont,eps); }
-      const kx=natW/W, ky=natH/H;
-      cb(simp.map(p=>({id:uid("pt"),x:+(p.x*kx).toFixed(1),y:+(p.y*ky).toFixed(1),curve:false})));
+      cont=smoothClosed(cont,2);                         // one light pass only
+      // keep enough points to resolve tight curves (tabs); curves fill the rest
+      let eps=Math.max(1,maxDim*0.0035), simp=rdp(cont,eps);
+      while(simp.length>150){ eps*=1.25; simp=rdp(cont,eps); }
+      const kx=natW/W, ky=natH/H, N=simp.length;
+      let perim=0; for(let i=0;i<N;i++) perim+=Math.hypot(simp[i].x-simp[(i+1)%N].x, simp[i].y-simp[(i+1)%N].y);
+      // Curved by default (smooth board edges). A vertex is a hard corner only
+      // when a big turn sits between two LONG straight runs — that keeps tight
+      // convex curves (mounting tabs) rounded instead of collapsing to a peak.
+      cb(simp.map((p,i)=>{
+        const a=simp[(i-1+N)%N], b=simp[(i+1)%N];
+        const v1x=p.x-a.x,v1y=p.y-a.y,v2x=b.x-p.x,v2y=b.y-p.y;
+        const segA=Math.hypot(v1x,v1y), segB=Math.hypot(v2x,v2y);
+        const cosA=(segA&&segB)?clamp((v1x*v2x+v1y*v2y)/(segA*segB),-1,1):1;
+        const turn=Math.acos(cosA)*180/Math.PI;
+        const sharp = turn>62 && segA>perim*0.05 && segB>perim*0.05;
+        return {id:uid("pt"), x:+(p.x*kx).toFixed(1), y:+(p.y*ky).toFixed(1), curve: !sharp};
+      }));
     }catch(e){ cb(null); } };
     im.onerror=()=>cb(null);
     im.src=dataURL;
