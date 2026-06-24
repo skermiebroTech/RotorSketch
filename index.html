@@ -1468,8 +1468,13 @@ App.Editor = (function(){
     g.appendChild(el("rect",{class:"node-rect board"+(n.locked?" locked":""), x:-2,y:-2,width:lay.w+4,height:lay.h+4, rx:7}));
     // native-coordinate artwork (image, outline, holes, visuals, pads)
     const inner=el("g",{transform:`translate(${-bb.x*scale} ${-bb.y*scale}) scale(${scale})`, style:"pointer-events:none"});
-    if(part.image && part.imageW){ inner.appendChild(svgImage(part.image,{x:0,y:0,width:part.imageW,height:part.imageH,opacity:0.9,preserveAspectRatio:"none"})); }
     const op=(part.outline&&part.outline.points)||[];
+    const clipped=op.length>=3 && part.outline.closed!==false;  // a closed outline cuts out the white bg
+    if(part.image && part.imageW){
+      const im=svgImage(part.image,{x:0,y:0,width:part.imageW,height:part.imageH,opacity:0.95,preserveAspectRatio:"none"});
+      if(clipped){ const cid="bclip_"+n.id; const cp=el("clipPath",{id:cid,clipPathUnits:"userSpaceOnUse"}); cp.appendChild(el("path",{d:App.PartEditor.outlinePath(op,true)})); inner.appendChild(cp); im.setAttribute("clip-path","url(#"+cid+")"); }
+      inner.appendChild(im);
+    }
     if(op.length>=3){ inner.appendChild(el("path",{d:App.PartEditor.outlinePath(op,part.outline.closed!==false), fill:"var(--panel-2)","fill-opacity":part.image?0:0.5, stroke:"var(--text-faint)","stroke-width":1.4,"vector-effect":"non-scaling-stroke","stroke-linejoin":"round"})); }
     (part.holes||[]).forEach(hh=> inner.appendChild(el("circle",{cx:hh.x,cy:hh.y,r:Math.max(0.5,(hh.d||3)/2/s), fill:"var(--bg)", stroke:"var(--text-faint)","stroke-width":1,"vector-effect":"non-scaling-stroke"})));
     (part.visuals||[]).forEach(v=> inner.appendChild(boardShape(v,s,"var(--w-motor)","rgba(192,107,255,.18)")));
@@ -1837,9 +1842,15 @@ App.Editor = (function(){
   function exportBoardNode(n,comp,l,C){
     const part=l.part, scale=l.scale, bb=l.bb, s=l.s;
     const NX=x=> n.x + (x-bb.x)*scale, NY=y=> n.y + (y-bb.y)*scale;
-    let out="";
-    if(part.image && part.imageW){ out+=`<image x="${NX(0)}" y="${NY(0)}" width="${part.imageW*scale}" height="${part.imageH*scale}" preserveAspectRatio="none" opacity="0.9" xlink:href="${part.image}" href="${part.image}"/>`; }
     const op=(part.outline&&part.outline.points)||[];
+    const clipped=op.length>=3 && part.outline.closed!==false;  // closed outline removes the white bg
+    let out="";
+    if(part.image && part.imageW){
+      let clip="";
+      if(clipped){ const cid="bclip_"+n.id; const dPath=App.PartEditor.outlinePath(op.map(p=>({...p,x:NX(p.x),y:NY(p.y)})),true);
+        out+=`<clipPath id="${cid}" clipPathUnits="userSpaceOnUse"><path d="${dPath}"/></clipPath>`; clip=` clip-path="url(#${cid})"`; }
+      out+=`<image x="${NX(0)}" y="${NY(0)}" width="${part.imageW*scale}" height="${part.imageH*scale}" preserveAspectRatio="none" opacity="0.95"${clip} xlink:href="${part.image}" href="${part.image}"/>`;
+    }
     if(op.length>=3){ const dPath=App.PartEditor.outlinePath(op.map(p=>({...p,x:NX(p.x),y:NY(p.y)})), part.outline.closed!==false);
       out+=`<path d="${dPath}" fill="${C.node}" fill-opacity="${part.image?0:0.5}" stroke="${C.line}" stroke-width="1.5"/>`; }
     (part.holes||[]).forEach(h=>{ out+=`<circle cx="${NX(h.x)}" cy="${NY(h.y)}" r="${Math.max(1,(h.d||3)/2/s*scale)}" fill="${C.bg}" stroke="${C.sub}" stroke-width="1.2"/>`; });
@@ -2699,11 +2710,17 @@ App.PartEditor = (function(){
     if(!stage) return;
     const g=el("g",{id:"peVp"});
     const sc=partScale(part); const pat=part.pattern;
-    // image for the current side
+    // image for the current side. Once a closed outline exists, clip the image
+    // to it so the white background is removed — except while editing the
+    // outline (step 3), where the full photo must stay visible to trace.
     const img=currentImage();
-    if(img.data&&img.w) g.appendChild(svgImage(img.data,{x:0,y:0,width:img.w,height:img.h,class:"ol-image"}));
-    // outline (shared across sides)
     const op=part.outline.points;
+    if(img.data&&img.w){
+      const im=svgImage(img.data,{x:0,y:0,width:img.w,height:img.h,class:"ol-image"});
+      if(op.length>=3 && part.outline.closed && step!==3){ const cp=el("clipPath",{id:"peclip",clipPathUnits:"userSpaceOnUse"}); cp.appendChild(el("path",{d:outlinePath(op,true)})); g.appendChild(cp); im.setAttribute("clip-path","url(#peclip)"); }
+      g.appendChild(im);
+    }
+    // outline (shared across sides)
     if(op.length>=2) g.appendChild(el("path",{class:"ol-outline"+(part.outline.closed?"":" open"), d:outlinePath(op,part.outline.closed)}));
     // calibration line
     if(part.calibration){ const a=holeById(part.calibration.aId), b=holeById(part.calibration.bId);
