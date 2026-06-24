@@ -317,6 +317,9 @@ button{cursor:pointer;border:none;background:none}
 
 /* ---- Build & BOM view ---------------------------------------------------- */
 .scroll-view{flex:1;overflow-y:auto;min-height:0;padding:20px;display:flex;flex-direction:column;gap:18px}
+/* keep panels at their natural height so the view scrolls instead of squashing
+   them (a tall parts list from a preset was collapsing the Build-specs panel) */
+.scroll-view>*{flex-shrink:0}
 .panel-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
 .panel-card>.pc-head{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line-soft)}
 .panel-card>.pc-head h3{font-family:var(--font-display);font-size:14px;letter-spacing:.04em;font-weight:600}
@@ -573,8 +576,12 @@ table.bom tfoot td{font-family:var(--font-mono);font-weight:700;background:var(-
 /* board nodes drawn on the wiring canvas (calibrated custom parts) */
 .node-rect.board{fill:transparent;stroke:var(--line-soft)}
 .node-rect.board.sel{stroke:var(--accent);stroke-width:2}
-.plabel.board{font-size:8.5px}
-.node-title.board{fill:var(--text-dim);font-family:var(--font-display);font-weight:600;font-size:10.5px}
+/* board pad labels sit on the busy PCB photo, so give them a dark halo +
+   bright bold fill (like wire labels) so they stay legible */
+.plabel.board{font-size:9px;font-weight:700;fill:var(--text);paint-order:stroke;stroke:var(--bg);stroke-width:2.6px;stroke-linejoin:round}
+.pin-leader{stroke:var(--text-faint);stroke-width:.8;opacity:.5}
+[data-theme="light"] .plabel.board{stroke:#ffffff}
+.node-title.board{fill:var(--text);font-family:var(--font-display);font-weight:700;font-size:10.5px;paint-order:stroke;stroke:var(--bg);stroke-width:2.6px;stroke-linejoin:round}
 
 /* ---- in-app docs ---- */
 .doc{max-width:760px;margin:0 auto;padding:26px 24px 60px;line-height:1.6;color:var(--text-dim)}
@@ -872,8 +879,10 @@ App.Config = (function(){
     {key:"5v",     label:"5V",     wire:"5v",     out:true},
     {key:"9v",     label:"9V/10V", wire:"9v",     out:true},
     {key:"3v3",    label:"3V3",    wire:"5v",     out:true},
-    {key:"tx",     label:"TX",     wire:"uart"},
-    {key:"rx",     label:"RX",     wire:"uart"},
+    // TX/RX both ride the UART wire, but their pads get distinct colours so a
+    // serial pair is easy to read: TX = yellow, RX = dark blue.
+    {key:"tx",     label:"TX",     wire:"uart", color:"#ffd60a"},
+    {key:"rx",     label:"RX",     wire:"uart", color:"#2563eb"},
     {key:"sbus",   label:"SBUS",   wire:"signal"},
     {key:"cam",    label:"CAM",    wire:"video"},
     {key:"vtx",    label:"VTX",    wire:"video"},
@@ -907,6 +916,7 @@ App.Config = (function(){
 
   function pinColor(pin){
     const t = PIN_MAP[pin.type];
+    if(t && t.color) return t.color;          // pin-type override (e.g. TX/RX)
     return WIRE_MAP[(t&&t.wire)||"custom"].color;
   }
   function defaultWireForPins(a,b){
@@ -1376,7 +1386,7 @@ App.Editor = (function(){
   const HEAD_H=34, PIN_GAP=22, PAD_B=12, NODE_W=158, DOT_R=5, GRID=22, SNAP=18;
   // Canvas render scale for calibrated board parts: how many on-canvas px equal
   // one real-world mm. Keeps custom boards roughly the size of generic nodes.
-  const CANVAS_PX_PER_MM=3.4;
+  const CANVAS_PX_PER_MM=3.0;
   const NS="http://www.w3.org/2000/svg";
   const S=App.State.S;
 
@@ -1441,12 +1451,24 @@ App.Editor = (function(){
       // wire leaves the pad pointing away from the board centre
       let nx=px-cx, ny=py-cy; const m=Math.hypot(nx,ny)||1; nx/=m; ny/=m;
       const pin=(node.pins||[])[i]||{};
-      const horiz=Math.abs(nx)>=Math.abs(ny);
+      // connection-dot radius tracks the real pad size (clamped so it stays
+      // clickable) instead of a fixed dot — keeps dense boards from looking like
+      // a pile of oversized rings.
+      const r=clamp((pd.wMm||1.6)*CANVAS_PX_PER_MM*0.5, 2.6, DOT_R);
       out.pins.push({ id:pin.id||("p"+i), name:pin.name||pd.name||"PAD", type:pin.type||pd.type||"signal",
-        rx:px, ry:py, nx, ny,
-        anchor: horiz?(nx>0?"start":"end"):"middle",
-        lx: horiz?(nx>0?9:-9):0, ly: horiz?3:(ny>0?13:-7) });
+        rx:px, ry:py, nx, ny, r });
     });
+    // Lay pad names out in tidy left/right columns with leader lines (datasheet
+    // pinout style) so even a dense board stays readable — no overlapping text.
+    const ROW=12.5, estW=p=>String(p.name||"").length*5.6+8;
+    [true,false].forEach(isL=>{
+      const col=out.pins.filter(p=> isL? p.rx<cx : p.rx>=cx).sort((a,b)=>a.ry-b.ry);
+      let prev=-1e9; col.forEach(p=>{ const y=Math.max(p.ry, prev+ROW); prev=y; p.lbly=y; });
+      col.forEach(p=>{ p.lblx= isL? -10 : w+10; p.lblAnchor= isL?"end":"start"; });
+    });
+    out.bandL=Math.max(12,...out.pins.filter(p=>p.lblAnchor==="end").map(estW));
+    out.bandR=Math.max(12,...out.pins.filter(p=>p.lblAnchor==="start").map(estW));
+    out.labelMaxY=Math.max(h,...out.pins.map(p=>p.lbly||0));
     return out;
   }
   function svgImage(href,attrs){ const im=el("image",attrs); im.setAttribute("href",href); im.setAttributeNS("http://www.w3.org/1999/xlink","href",href); return im; }
@@ -1464,8 +1486,9 @@ App.Editor = (function(){
   function buildBoardNodeEl(n,comp,lay){
     const part=lay.part, scale=lay.scale, bb=lay.bb, s=lay.s;
     const g=el("g",{class:"node board","data-node":n.id, transform:`translate(${n.x} ${n.y})`, style:"cursor:grab"});
-    // selection / drag target sits behind everything
-    g.appendChild(el("rect",{class:"node-rect board"+(n.locked?" locked":""), x:-2,y:-2,width:lay.w+4,height:lay.h+4, rx:7}));
+    // selection / drag target — widened to cover the left/right label columns
+    const bL=(lay.bandL||12)+12, bR=(lay.bandR||12)+12;
+    g.appendChild(el("rect",{class:"node-rect board"+(n.locked?" locked":""), x:-bL, y:-2, width:lay.w+bL+bR, height:Math.max(lay.h,lay.labelMaxY||lay.h)+6, rx:7}));
     // native-coordinate artwork (image, outline, holes, visuals, pads)
     const inner=el("g",{transform:`translate(${-bb.x*scale} ${-bb.y*scale}) scale(${scale})`, style:"pointer-events:none"});
     const op=(part.outline&&part.outline.points)||[];
@@ -1480,12 +1503,18 @@ App.Editor = (function(){
     (part.visuals||[]).forEach(v=> inner.appendChild(boardShape(v,s,"var(--w-motor)","rgba(192,107,255,.18)")));
     (part.pads||[]).forEach(p=> inner.appendChild(boardShape(p,s,"var(--w-uart)","rgba(58,155,255,.22)")));
     g.appendChild(inner);
-    // interactive connection pins (node-local coords) — same shape as box nodes
+    // leader lines from each pad to its label column (drawn under the dots)
+    const showLabels=S.settings.labels!==false;
+    if(showLabels) lay.pins.forEach(p=>{ if(p.lblx==null) return;
+      g.appendChild(el("line",{class:"pin-leader", x1:p.rx, y1:p.ry, x2:p.lblx+(p.lblAnchor==="end"?5:-5), y2:p.lbly})); });
+    // interactive connection pins (dot at the pad) + the column label
     lay.pins.forEach(p=>{
       const pg=el("g",{class:"pin","data-node":n.id,"data-pin":p.id, transform:`translate(${p.rx} ${p.ry})`});
-      pg.appendChild(el("circle",{class:"pdot", r:DOT_R, stroke:App.Config.pinColor(p)}));
-      if(S.settings.labels!==false){ const t=el("text",{class:"plabel board", x:p.lx, y:p.ly||0, "text-anchor":p.anchor}); t.textContent=p.name; pg.appendChild(t); }
+      // invisible larger hit-area keeps small pads easy to grab for wiring
+      pg.appendChild(el("circle",{r:Math.max(p.r||DOT_R,7), fill:"transparent", stroke:"none"}));
+      pg.appendChild(el("circle",{class:"pdot", r:(p.r||DOT_R), stroke:App.Config.pinColor(p)}));
       g.appendChild(pg);
+      if(showLabels && p.lblx!=null){ const t=el("text",{class:"plabel board", x:p.lblx, y:p.lbly, "text-anchor":p.lblAnchor}); t.textContent=p.name; g.appendChild(t); }
     });
     const title=el("text",{class:"node-title board", x:0, y:-7}); title.textContent=trunc(n.name||comp.name||"Part",24); g.appendChild(title);
     if(n.locked){ g.appendChild(el("path",{d:lockPath(lay.w-12,lay.h-10), fill:"none", stroke:"var(--text-faint)","stroke-width":1.4})); }
@@ -1858,8 +1887,10 @@ App.Editor = (function(){
       const inner=p.shape==="circle"?`<circle r="${w/2}"`:p.shape==="oval"?`<ellipse rx="${w/2}" ry="${hh/2}"`:`<rect x="${-w/2}" y="${-hh/2}" width="${w}" height="${hh}" rx="${p.shape==="roundrect"?Math.min(w,hh)*0.28:0}"`;
       out+=`<g transform="translate(${cx} ${cy}) rotate(${p.rot||0})">${inner} fill="rgba(58,155,255,.25)" stroke="#3a9bff" stroke-width="1.2"/></g>`; });
     l.pins.forEach(p=>{ const px=n.x+p.rx,py=n.y+p.ry; const col=App.Config.pinColor(p);
-      out+=`<circle cx="${px}" cy="${py}" r="${DOT_R}" fill="${C.pinfill}" stroke="${col}" stroke-width="1.6"/>`;
-      out+=`<text x="${px+p.lx}" y="${py+(p.ly||0)+3}" fill="${C.lbl}" font-size="9" text-anchor="${p.anchor}">${esc(p.name)}</text>`; });
+      if(p.lblx!=null){ const lx=n.x+p.lblx, ly=n.y+p.lbly;
+        out+=`<line x1="${px}" y1="${py}" x2="${lx+(p.lblAnchor==="end"?5:-5)}" y2="${ly}" stroke="${C.sub}" stroke-width="0.8" opacity="0.5"/>`;
+        out+=`<text x="${lx}" y="${ly+3}" fill="${C.text}" font-size="9" font-weight="700" text-anchor="${p.lblAnchor}" paint-order="stroke" stroke="${C.bg}" stroke-width="2.6">${esc(p.name)}</text>`; }
+      out+=`<circle cx="${px}" cy="${py}" r="${p.r||DOT_R}" fill="${C.pinfill}" stroke="${col}" stroke-width="1.6"/>`; });
     out+=`<text x="${n.x}" y="${n.y-7}" fill="${C.sub}" font-size="11">${esc(trunc(n.name||comp.name||"Part",24))}</text>`;
     return out;
   }
@@ -1867,7 +1898,8 @@ App.Editor = (function(){
     const d=diagram();
     const lay={}; d.nodes.forEach(n=>lay[n.id]=layoutNode(n));
     let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
-    d.nodes.forEach(n=>{const l=lay[n.id];minx=Math.min(minx,n.x);miny=Math.min(miny,n.y);maxx=Math.max(maxx,n.x+l.w);maxy=Math.max(maxy,n.y+l.h);});
+    d.nodes.forEach(n=>{const l=lay[n.id]; const bL=l.board?(l.bandL||0)+12:0, bR=l.board?(l.bandR||0)+12:0, bh=l.board?Math.max(l.h,l.labelMaxY||l.h):l.h;
+      minx=Math.min(minx,n.x-bL);miny=Math.min(miny,n.y);maxx=Math.max(maxx,n.x+l.w+bR);maxy=Math.max(maxy,n.y+bh);});
     if(!isFinite(minx)){minx=0;miny=0;maxx=400;maxy=300;}
     const pad=40; minx-=pad;miny-=pad;maxx+=pad;maxy+=pad;
     const w=maxx-minx, h=maxy-miny;
